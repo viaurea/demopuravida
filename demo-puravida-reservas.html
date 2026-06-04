@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reservas & Recordatorios · Pura Vida Ourense</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0d110a; --card: #141a10; --border: #253020;
+      --accent: #7ec95a; --accent2: #56c9a0; --text: #edf2e8;
+      --dim: #8aaa78; --dark: #0a0e08; --green: #4ade80;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+
+    /* TABS */
+    .tabs { display: flex; gap: 0; background: var(--dark); border-bottom: 1px solid var(--border); overflow-x: auto; }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab { flex-shrink: 0; padding: 14px 20px; font-size: 13px; font-weight: 600; color: var(--dim); cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s; background: none; border-top: none; border-left: none; border-right: none; font-family: 'Inter', sans-serif; }
+    .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ── PANTALLA 1: PÁGINA DE BOOKING ── */
+    .booking-page { max-width: 460px; margin: 0 auto; padding: 24px 16px 48px; }
+    .bp-header { text-align: center; padding: 28px 0 24px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+    .bp-logo { font-size: 32px; margin-bottom: 10px; }
+    .bp-name { font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+    .bp-slogan { font-size: 12px; color: var(--dim); font-style: italic; margin-bottom: 12px; }
+    .bp-addr { font-size: 11px; color: var(--dim); }
+
+    .bp-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--dim); margin-bottom: 12px; }
+
+    .service-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 10px; cursor: pointer; transition: all .2s; display: flex; align-items: center; gap: 14px; }
+    .service-card:hover { border-color: var(--accent); background: rgba(126,201,90,0.05); }
+    .service-card.selected { border-color: var(--accent); background: rgba(126,201,90,0.08); }
+    .service-icon { font-size: 26px; width: 48px; height: 48px; background: rgba(126,201,90,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .service-info { flex: 1; }
+    .service-name { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+    .service-desc { font-size: 11px; color: var(--dim); line-height: 1.4; }
+    .service-price { font-size: 14px; font-weight: 700; color: var(--accent); white-space: nowrap; }
+
+    .slot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
+    .slot { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px 6px; text-align: center; cursor: pointer; transition: all .2s; }
+    .slot:hover { border-color: var(--accent); }
+    .slot.selected { background: rgba(126,201,90,0.12); border-color: var(--accent); }
+    .slot.full { opacity: 0.4; cursor: not-allowed; }
+    .slot-time { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+    .slot-spots { font-size: 10px; color: var(--dim); }
+    .slot.selected .slot-time { color: var(--accent); }
+
+    .bp-form { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 16px; }
+    .bp-form-title { font-size: 14px; font-weight: 700; margin-bottom: 14px; }
+    .form-field { margin-bottom: 12px; }
+    .form-label { font-size: 11px; color: var(--dim); margin-bottom: 5px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-input { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; color: var(--text); font-size: 13px; font-family: 'Inter', sans-serif; outline: none; }
+    .form-input:focus { border-color: var(--accent); }
+
+    .bp-btn { width: 100%; background: var(--accent); color: #0d110a; font-size: 14px; font-weight: 800; padding: 14px; border-radius: 100px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; letter-spacing: 0.3px; }
+
+    .demo-note { background: rgba(126,201,90,0.06); border: 1px solid rgba(126,201,90,0.2); border-radius: 10px; padding: 10px 14px; font-size: 11px; color: var(--dim); text-align: center; margin-top: 12px; }
+    .demo-note strong { color: var(--accent); }
+
+    /* ── PANTALLA 2: CONFIRMACIÓN WHATSAPP ── */
+    .wa-screen { max-width: 420px; margin: 0 auto; padding: 24px 16px 48px; }
+    .wa-screen-title { font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 6px; text-align: center; }
+    .wa-screen-sub { font-size: 13px; color: var(--dim); text-align: center; margin-bottom: 28px; line-height: 1.6; }
+
+    .phone-mockup { max-width: 280px; margin: 0 auto 28px; background: #1a1a2e; border-radius: 30px; border: 3px solid #2a2a3e; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.6); }
+    .phone-status { background: #1a1a2e; padding: 10px 20px 0; display: flex; justify-content: space-between; font-size: 10px; color: rgba(255,255,255,0.5); }
+    .wa-header { background: #075e54; padding: 10px 14px; display: flex; align-items: center; gap: 10px; }
+    .wa-back { color: #fff; font-size: 18px; cursor: pointer; }
+    .wa-av { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #4ade80, #22c55e); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .wa-info { flex: 1; }
+    .wa-name { font-size: 13px; font-weight: 700; color: #fff; }
+    .wa-status { font-size: 10px; color: rgba(255,255,255,0.7); }
+    .wa-body { background: #0d1117; padding: 14px 10px; min-height: 200px; }
+    .wa-bubble { background: #1f2c34; border-radius: 8px 8px 8px 2px; padding: 10px 12px; font-size: 10px; color: #e9edef; line-height: 1.7; max-width: 90%; position: relative; margin-bottom: 4px; }
+    .wa-bubble::before { content: ''; position: absolute; left: -6px; top: 0; border-top: 6px solid #1f2c34; border-left: 6px solid transparent; }
+    .wa-bubble-hi { color: var(--accent); font-weight: 700; }
+    .wa-time { font-size: 8px; color: #8696a0; text-align: right; margin-top: 4px; }
+
+    .wa-features { display: flex; flex-direction: column; gap: 10px; }
+    .wa-feature { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; display: flex; gap: 12px; align-items: flex-start; }
+    .wa-feature-icon { font-size: 20px; flex-shrink: 0; }
+    .wa-feature-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+    .wa-feature-desc { font-size: 11px; color: var(--dim); line-height: 1.5; }
+    .wa-feature-desc strong { color: var(--text); }
+
+    /* ── PANTALLA 3: RECORDATORIO 24H ── */
+    .reminder-screen { max-width: 420px; margin: 0 auto; padding: 24px 16px 48px; }
+
+    .timeline-flow { display: flex; flex-direction: column; gap: 0; position: relative; margin: 20px 0 28px; }
+    .timeline-flow::before { content: ''; position: absolute; left: 22px; top: 20px; bottom: 20px; width: 2px; background: var(--border); }
+    .tf-step { display: flex; gap: 16px; padding: 16px 0; position: relative; z-index: 1; }
+    .tf-dot { width: 44px; height: 44px; border-radius: 50%; background: rgba(126,201,90,0.1); border: 2px solid var(--accent); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .tf-content {}
+    .tf-time { font-size: 10px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+    .tf-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .tf-desc { font-size: 12px; color: var(--dim); line-height: 1.5; }
+    .tf-desc strong { color: var(--text); }
+
+    .phone-mockup-sm { max-width: 240px; margin: 0 auto 20px; background: #1a1a2e; border-radius: 26px; border: 2px solid #2a2a3e; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+
+    /* ── PANTALLA 4: CÓMO SE GESTIONA ── */
+    .mgmt-screen { max-width: 420px; margin: 0 auto; padding: 24px 16px 48px; }
+    .mgmt-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 12px; }
+    .mgmt-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .mgmt-card-icon { font-size: 24px; width: 44px; height: 44px; background: rgba(126,201,90,0.1); border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .mgmt-card-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .mgmt-card-sub { font-size: 11px; color: var(--dim); }
+    .mgmt-points { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+    .mgmt-points li { font-size: 12px; color: var(--dim); display: flex; gap: 8px; }
+    .mgmt-points li::before { content: '→'; color: var(--accent); font-weight: 700; flex-shrink: 0; }
+    .mgmt-points li strong { color: var(--text); }
+
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
+    .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; }
+    .stat-val { font-size: 28px; font-weight: 900; color: var(--accent); letter-spacing: -1px; margin-bottom: 4px; }
+    .stat-label { font-size: 11px; color: var(--dim); line-height: 1.4; }
+
+    .section-header { text-align: center; margin-bottom: 24px; padding: 20px 0 0; }
+    .section-header h2 { font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+    .section-header h2 span { color: var(--accent); }
+    .section-header p { font-size: 13px; color: var(--dim); line-height: 1.6; }
+  </style>
+</head>
+<body>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" onclick="showTab('booking')">📅 Página de Reservas</button>
+  <button class="tab" onclick="showTab('confirmacion')">💬 Confirmación WhatsApp</button>
+  <button class="tab" onclick="showTab('recordatorio')">⏰ Recordatorio 24h</button>
+  <button class="tab" onclick="showTab('gestion')">⚙️ Cómo funciona</button>
+</div>
+
+
+<!-- ════════════ TAB 1: BOOKING ════════════ -->
+<div class="screen active" id="booking">
+  <div class="booking-page">
+    <div class="bp-header">
+      <div class="bp-logo">🌿</div>
+      <div class="bp-name">Pura Vida Ourense</div>
+      <div class="bp-slogan">"Siente, vive y disfruta el camino al cambio"</div>
+      <div class="bp-addr">📍 C/ Galicia 18, Ourense · 633 279 932</div>
+    </div>
+
+    <div class="bp-section-title">Elige tu clase o servicio</div>
+
+    <div class="service-card selected">
+      <div class="service-icon">🧘</div>
+      <div class="service-info">
+        <div class="service-name">Yoga Vinyasa</div>
+        <div class="service-desc">Flujo dinámico · Grupos reducidos · 60 min</div>
+      </div>
+      <div class="service-price">75€/mes</div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon">🤸</div>
+      <div class="service-info">
+        <div class="service-name">Pilates & Hipopresivos</div>
+        <div class="service-desc">Control postural · Core y suelo pélvico · 60 min</div>
+      </div>
+      <div class="service-price">75€/mes</div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon">💪</div>
+      <div class="service-info">
+        <div class="service-name">Entrenamiento Funcional</div>
+        <div class="service-desc">Fuerza, resistencia y movilidad · 60 min</div>
+      </div>
+      <div class="service-price">70€/mes</div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon">🏃</div>
+      <div class="service-info">
+        <div class="service-name">Personal Training</div>
+        <div class="service-desc">Entrenamiento personalizado 1 a 1 · 45 min</div>
+      </div>
+      <div class="service-price">25€/ses</div>
+    </div>
+
+    <div class="bp-section-title" style="margin-top: 20px;">Elige tu horario — Semana del 9 al 13 junio</div>
+
+    <div class="slot-grid">
+      <div class="slot selected">
+        <div class="slot-time">Lun 9:00</div>
+        <div class="slot-spots">3/8 plazas</div>
+      </div>
+      <div class="slot">
+        <div class="slot-time">Mié 9:00</div>
+        <div class="slot-spots">5/8 plazas</div>
+      </div>
+      <div class="slot">
+        <div class="slot-time">Vie 9:00</div>
+        <div class="slot-spots">2/8 plazas</div>
+      </div>
+      <div class="slot">
+        <div class="slot-time">Lun 18:30</div>
+        <div class="slot-spots">6/8 plazas</div>
+      </div>
+      <div class="slot full">
+        <div class="slot-time">Mié 18:30</div>
+        <div class="slot-spots">Completo</div>
+      </div>
+      <div class="slot">
+        <div class="slot-time">Vie 18:30</div>
+        <div class="slot-spots">4/8 plazas</div>
+      </div>
+    </div>
+
+    <div class="bp-form">
+      <div class="bp-form-title">Tus datos</div>
+      <div class="form-field">
+        <label class="form-label">Nombre completo</label>
+        <input class="form-input" type="text" value="Laura Rodríguez" readonly>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Número de WhatsApp</label>
+        <input class="form-input" type="tel" value="+34 611 234 567" readonly>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" value="laura@email.com" readonly>
+      </div>
+    </div>
+
+    <button class="bp-btn" onclick="showTab('confirmacion')">✅ Confirmar reserva →</button>
+    <div class="demo-note">Este es el enlace que tus alumnos usarán para reservar solos. <strong>Disponible 24h, desde el móvil, sin llamar ni escribir.</strong></div>
+  </div>
+</div>
+
+
+<!-- ════════════ TAB 2: CONFIRMACIÓN ════════════ -->
+<div class="screen" id="confirmacion">
+  <div class="wa-screen">
+    <div class="section-header">
+      <h2>Confirmación <span>automática</span></h2>
+      <p>En cuanto Laura confirma su reserva, le llega este WhatsApp en segundos. Sin que tú hagas nada.</p>
+    </div>
+
+    <div class="phone-mockup">
+      <div class="phone-status">
+        <span>9:41</span>
+        <span>📶 🔋</span>
+      </div>
+      <div class="wa-header">
+        <div class="wa-back">←</div>
+        <div class="wa-av">🌿</div>
+        <div class="wa-info">
+          <div class="wa-name">Pura Vida Ourense</div>
+          <div class="wa-status">en línea</div>
+        </div>
+      </div>
+      <div class="wa-body">
+        <div class="wa-bubble">
+          Hola Laura 👋<br><br>
+          Tu clase en <span class="wa-bubble-hi">Pura Vida</span> está confirmada:<br><br>
+          🧘 <span class="wa-bubble-hi">Yoga Vinyasa</span><br>
+          📅 <span class="wa-bubble-hi">Lunes 9 junio a las 9:00</span><br>
+          📍 C/ Galicia 18, Ourense<br><br>
+          ¡Nos vemos! 🌿<br>
+          — Pura Vida Ourense
+          <div class="wa-time">9:41 ✓✓</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wa-features">
+      <div class="wa-feature">
+        <div class="wa-feature-icon">⚡</div>
+        <div>
+          <div class="wa-feature-title">Envío instantáneo</div>
+          <div class="wa-feature-desc">El mensaje llega <strong>en segundos</strong> después de confirmar la reserva. Sin delay, sin espera.</div>
+        </div>
+      </div>
+      <div class="wa-feature">
+        <div class="wa-feature-icon">🎯</div>
+        <div>
+          <div class="wa-feature-title">Personalizado con su nombre</div>
+          <div class="wa-feature-desc">Cada mensaje incluye el <strong>nombre del alumno</strong>, la clase concreta y la hora exacta.</div>
+        </div>
+      </div>
+      <div class="wa-feature">
+        <div class="wa-feature-icon">🤖</div>
+        <div>
+          <div class="wa-feature-title">100% automático</div>
+          <div class="wa-feature-desc">No tienes que escribir nada. El sistema lo envía <strong>solo cada vez</strong> que alguien reserva.</div>
+        </div>
+      </div>
+      <div class="wa-feature">
+        <div class="wa-feature-icon">📱</div>
+        <div>
+          <div class="wa-feature-title">WhatsApp nativo</div>
+          <div class="wa-feature-desc">Llega como un WhatsApp normal. Los alumnos <strong>no necesitan instalar nada</strong>.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════ TAB 3: RECORDATORIO ════════════ -->
+<div class="screen" id="recordatorio">
+  <div class="reminder-screen">
+    <div class="section-header">
+      <h2>Recordatorio <span>24 horas antes</span></h2>
+      <p>Cada mañana a las 9am el sistema revisa quién tiene clase al día siguiente y manda el recordatorio automáticamente.</p>
+    </div>
+
+    <div class="timeline-flow">
+      <div class="tf-step">
+        <div class="tf-dot">📅</div>
+        <div class="tf-content">
+          <div class="tf-time">Domingo · Cualquier hora</div>
+          <div class="tf-title">Laura reserva su clase de yoga</div>
+          <div class="tf-desc">Desde casa, a las 11pm, desde el móvil. El sistema registra la reserva y le manda confirmación al instante.</div>
+        </div>
+      </div>
+      <div class="tf-step">
+        <div class="tf-dot">🤖</div>
+        <div class="tf-content">
+          <div class="tf-time">Domingo · Automático</div>
+          <div class="tf-title">El sistema guarda la reserva</div>
+          <div class="tf-desc">Nombre, teléfono, clase y hora quedan registrados. <strong>Sin papel, sin Excel, sin WhatsApp a mano.</strong></div>
+        </div>
+      </div>
+      <div class="tf-step">
+        <div class="tf-dot">⏰</div>
+        <div class="tf-content">
+          <div class="tf-time">Lunes · 9:00am automático</div>
+          <div class="tf-title">Recordatorio a todos los de mañana</div>
+          <div class="tf-desc">El sistema comprueba quién tiene clase el martes y les manda el recordatorio. <strong>A todos a la vez, solo.</strong></div>
+        </div>
+      </div>
+      <div class="tf-step">
+        <div class="tf-dot">💬</div>
+        <div class="tf-content">
+          <div class="tf-time">Lunes · 9:01am</div>
+          <div class="tf-title">Laura recibe el recordatorio</div>
+          <div class="tf-desc">WhatsApp en su móvil. Ya no se olvidará. <strong>Asistencia garantizada.</strong></div>
+        </div>
+      </div>
+      <div class="tf-step">
+        <div class="tf-dot">💪</div>
+        <div class="tf-content">
+          <div class="tf-time">Martes · 9:00am</div>
+          <div class="tf-title">Laura aparece. La clase se llena.</div>
+          <div class="tf-desc">Sin no-shows, sin plazas vacías, sin llamadas de última hora. El centro funciona perfectamente.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="phone-mockup-sm">
+      <div class="phone-status" style="background:#1a1a2e; padding: 8px 16px 0; display:flex; justify-content:space-between; font-size:9px; color:rgba(255,255,255,0.5)">
+        <span>9:01</span><span>📶 🔋</span>
+      </div>
+      <div class="wa-header">
+        <div class="wa-back" style="font-size:14px; color:#fff; cursor:pointer">←</div>
+        <div class="wa-av" style="width:28px; height:28px; font-size:13px">🌿</div>
+        <div class="wa-info">
+          <div class="wa-name" style="font-size:11px">Pura Vida Ourense</div>
+          <div class="wa-status" style="font-size:9px">ayer, 9:01</div>
+        </div>
+      </div>
+      <div class="wa-body" style="padding: 10px 8px;">
+        <div class="wa-bubble" style="font-size:9px">
+          Hola Laura 👋<br><br>
+          Te recordamos que <span class="wa-bubble-hi">mañana</span> tienes clase:<br><br>
+          🧘 <span class="wa-bubble-hi">Yoga Vinyasa</span><br>
+          📅 <span class="wa-bubble-hi">Martes a las 9:00</span><br>
+          📍 C/ Galicia 18, Ourense<br><br>
+          ¡Nos vemos! 🌿<br>
+          — Pura Vida
+          <div class="wa-time">9:01 ✓✓</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-val">94%</div>
+        <div class="stat-label">Tasa de asistencia con recordatorio automático</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">0 min</div>
+        <div class="stat-label">Tiempo tuyo para enviar recordatorios cada día</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════ TAB 4: GESTIÓN ════════════ -->
+<div class="screen" id="gestion">
+  <div class="mgmt-screen">
+    <div class="section-header">
+      <h2>Cómo <span>funciona todo</span></h2>
+      <p>Un sistema que trabaja solo para que tú te centres en tus alumnos.</p>
+    </div>
+
+    <div class="mgmt-card">
+      <div class="mgmt-card-header">
+        <div class="mgmt-card-icon">🔗</div>
+        <div>
+          <div class="mgmt-card-title">Tu enlace de reservas</div>
+          <div class="mgmt-card-sub">Lo compartes una vez, funciona siempre</div>
+        </div>
+      </div>
+      <ul class="mgmt-points">
+        <li><strong>Un enlace único</strong> con todos tus servicios y horarios disponibles</li>
+        <li>Lo pones en tu <strong>Instagram, WhatsApp y web</strong></li>
+        <li>Los alumnos reservan <strong>desde el móvil en 2 minutos</strong></li>
+        <li>Disponible <strong>24 horas, 7 días</strong> — sin que tú estés pendiente</li>
+      </ul>
+    </div>
+
+    <div class="mgmt-card">
+      <div class="mgmt-card-header">
+        <div class="mgmt-card-icon">📅</div>
+        <div>
+          <div class="mgmt-card-title">Tu calendario siempre actualizado</div>
+          <div class="mgmt-card-sub">Cada reserva aparece sola en Google Calendar</div>
+        </div>
+      </div>
+      <ul class="mgmt-points">
+        <li>Ves de un vistazo <strong>quién tiene clase cada día</strong></li>
+        <li>Controlas <strong>el aforo</strong> de cada clase en tiempo real</li>
+        <li><strong>Bloqueas días</strong> o festivos cuando quieras desde cal.com</li>
+        <li>Sincronizado con tu <strong>calendario del móvil</strong></li>
+      </ul>
+    </div>
+
+    <div class="mgmt-card">
+      <div class="mgmt-card-header">
+        <div class="mgmt-card-icon">💬</div>
+        <div>
+          <div class="mgmt-card-title">Mensajes automáticos</div>
+          <div class="mgmt-card-sub">Tú no escribes nada — el sistema lo hace</div>
+        </div>
+      </div>
+      <ul class="mgmt-points">
+        <li><strong>Confirmación inmediata</strong> al reservar — llegada en segundos</li>
+        <li><strong>Recordatorio cada mañana</strong> a las 9am del día anterior</li>
+        <li>Mensajes <strong>personalizados</strong> con nombre y clase concreta</li>
+        <li>Si quieres cambiar el texto, <strong>me avisas y lo actualizo</strong> yo</li>
+      </ul>
+    </div>
+
+    <div class="mgmt-card">
+      <div class="mgmt-card-header">
+        <div class="mgmt-card-icon">🛟</div>
+        <div>
+          <div class="mgmt-card-title">¿Y si algo falla?</div>
+          <div class="mgmt-card-sub">Soporte incluido — me encargo yo</div>
+        </div>
+      </div>
+      <ul class="mgmt-points">
+        <li>Me escribes por WhatsApp y lo resuelvo — <strong>respuesta en menos de 2h</strong></li>
+        <li><strong>Tú no tocas nada técnico</strong> — yo me encargo del sistema</li>
+        <li>Actualizaciones y mejoras incluidas <strong>sin coste extra</strong></li>
+      </ul>
+    </div>
+
+    <div style="background: rgba(126,201,90,0.06); border: 1px solid rgba(126,201,90,0.2); border-radius: 14px; padding: 20px; margin-top: 8px; text-align: center;">
+      <div style="font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 6px;">150€ instalación + 69€/mes</div>
+      <div style="font-size: 12px; color: var(--dim); margin-bottom: 16px; line-height: 1.6;">Todo incluido. Sin permanencia. En marcha en 5 días.</div>
+      <button onclick="window.open('https://wa.me/34611573580?text=Hola%20Brian%2C%20me%20interesa%20el%20sistema%20para%20Pura%20Vida')" style="background: #25d366; color: #fff; border: none; border-radius: 100px; padding: 12px 24px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif;">💬 Quiero saber más</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function showTab(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+    window.scrollTo(0,0);
+  }
+</script>
+</body>
+</html>
