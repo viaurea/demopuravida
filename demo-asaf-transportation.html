@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de Gestión · Asaf Transportation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0a0e14; --card: #111826; --card-hover: #16202f; --border: #1e2a3a;
+    --accent: #3b82f6; --accent-soft: rgba(59,130,246,0.12);
+    --amber: #f59e0b; --amber-soft: rgba(245,158,11,0.12);
+    --text: #e8edf2; --dim: #7891a8; --faint: #4a5f78; --dark: #060a10;
+    --green: #4ade80; --green-soft: rgba(74,222,128,0.1);
+    --yellow: #fbbf24; --yellow-soft: rgba(251,191,36,0.12);
+    --red: #f87171; --red-soft: rgba(248,113,113,0.1);
+  }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; -webkit-font-smoothing: antialiased; }
+
+  .tabs { display: flex; gap: 0; background: var(--dark); border-bottom: 1px solid var(--border); overflow-x: auto; position: sticky; top: 0; z-index: 20; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab { flex-shrink: 0; padding: 14px 20px; font-size: 13px; font-weight: 600; color: var(--dim); cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s; background: none; border-top: none; border-left: none; border-right: none; font-family: 'Inter', sans-serif; }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab:hover { color: var(--text); }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 20px 60px; }
+
+  .page-header { margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .page-header h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.4px; margin-bottom: 5px; }
+  .page-header h1 span { color: var(--accent); }
+  .page-header p { font-size: 13px; color: var(--dim); }
+  .logo-badge { background: linear-gradient(135deg, #3b82f622, #f59e0b22); border: 1px solid #24344a; border-radius: 10px; padding: 9px 16px; font-size: 12px; font-weight: 700; color: var(--accent); letter-spacing: 0.4px; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 28px; }
+  .kpi { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; transition: all .15s; }
+  .kpi:hover { background: var(--card-hover); }
+  .kpi .label { font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; font-weight: 600; }
+  .kpi .value { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; }
+  .kpi .sub { font-size: 11px; color: var(--dim); margin-top: 6px; }
+  .kpi.blue .value { color: var(--accent); }
+  .kpi.green .value { color: var(--green); }
+  .kpi.yellow .value { color: var(--yellow); }
+  .kpi.red .value { color: var(--red); }
+
+  .toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
+  .search-input { flex: 1; min-width: 220px; background: var(--card); border: 1px solid var(--border); border-radius: 9px; padding: 10px 14px; color: var(--text); font-size: 13px; font-family: 'Inter', sans-serif; outline: none; }
+  .search-input:focus { border-color: var(--accent); }
+  .search-input::placeholder { color: var(--faint); }
+  .filter-chip { background: var(--card); border: 1px solid var(--border); color: var(--dim); font-size: 12px; font-weight: 600; padding: 9px 14px; border-radius: 100px; cursor: pointer; font-family: 'Inter', sans-serif; transition: all .15s; white-space: nowrap; }
+  .filter-chip.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  .filter-chip:hover { color: var(--text); }
+
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 16px; }
+  .card-pad { padding: 22px; }
+  .card h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th { text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--faint); font-weight: 700; padding: 12px 16px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  tbody td { padding: 13px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tbody tr { cursor: pointer; transition: background .12s; }
+  tbody tr:hover { background: var(--card-hover); }
+  tbody tr:last-child td { border-bottom: none; }
+  .driver-cell { display: flex; align-items: center; gap: 10px; }
+  .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--accent-soft); display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; font-weight: 700; color: var(--accent); }
+  .driver-name { font-weight: 600; color: var(--text); }
+  .driver-sub { font-size: 11px; color: var(--dim); }
+  .plate { font-family: 'Inter', sans-serif; font-weight: 700; background: var(--dark); border: 1px solid var(--border); border-radius: 5px; padding: 2px 8px; font-size: 12px; letter-spacing: 0.5px; display: inline-block; }
+
+  .badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 100px; white-space: nowrap; }
+  .badge.ok { background: var(--green-soft); color: var(--green); }
+  .badge.warning { background: var(--yellow-soft); color: var(--yellow); }
+  .badge.expired { background: var(--red-soft); color: var(--red); }
+  .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--dim); font-size: 13px; }
+
+  /* FICHA */
+  .ficha-top { display: flex; gap: 20px; align-items: center; padding: 24px; flex-wrap: wrap; }
+  .ficha-avatar { width: 68px; height: 68px; border-radius: 16px; background: var(--accent-soft); display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 800; color: var(--accent); flex-shrink: 0; }
+  .ficha-name { font-size: 19px; font-weight: 800; margin-bottom: 3px; }
+  .ficha-meta { font-size: 12px; color: var(--dim); display: flex; gap: 14px; flex-wrap: wrap; margin-top: 6px; }
+  .ficha-meta span strong { color: var(--text); }
+
+  .doc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; padding: 0 22px 22px; }
+  .doc-item { background: var(--dark); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .doc-item-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .doc-label { font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.4px; font-weight: 700; }
+  .doc-date { font-size: 14px; font-weight: 700; }
+  .doc-days { font-size: 11px; color: var(--dim); margin-top: 3px; }
+
+  .driver-list-mini { display: flex; flex-direction: column; gap: 6px; padding: 14px; max-height: 480px; overflow-y: auto; }
+  .mini-row { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; cursor: pointer; transition: background .12s; }
+  .mini-row:hover, .mini-row.active { background: var(--card-hover); }
+  .mini-row.active { outline: 1px solid var(--accent); }
+  .mini-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--accent-soft); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--accent); flex-shrink: 0; }
+  .mini-name { font-size: 12.5px; font-weight: 600; }
+  .mini-sub { font-size: 10.5px; color: var(--dim); }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; margin-left: auto; flex-shrink: 0; }
+  .status-dot.ok { background: var(--green); }
+  .status-dot.warning { background: var(--yellow); }
+  .status-dot.expired { background: var(--red); }
+
+  .layout-2col { display: grid; grid-template-columns: 260px 1fr; gap: 16px; align-items: start; }
+  @media (max-width: 800px) { .layout-2col { grid-template-columns: 1fr; } }
+
+  /* EMAILS */
+  .email-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .email-item { display: flex; gap: 14px; padding: 16px 20px; border-bottom: 1px solid var(--border); cursor: default; transition: background .12s; }
+  .email-item:hover { background: var(--card-hover); }
+  .email-item:last-child { border-bottom: none; }
+  .email-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
+  .email-body { flex: 1; min-width: 0; }
+  .email-top { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 3px; }
+  .email-sender { font-size: 13px; font-weight: 700; color: var(--text); }
+  .email-date { font-size: 11px; color: var(--faint); white-space: nowrap; }
+  .email-subject { font-size: 12.5px; color: var(--text); margin-bottom: 3px; font-weight: 500; }
+  .email-snippet { font-size: 12px; color: var(--dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .email-tag { display: inline-flex; align-items: center; gap: 4px; font-size: 10.5px; font-weight: 700; padding: 3px 9px; border-radius: 100px; margin-top: 7px; }
+
+  .tag-firmar { background: var(--red-soft); color: var(--red); }
+  .tag-doc { background: var(--accent-soft); color: var(--accent); }
+  .tag-factura { background: var(--yellow-soft); color: var(--yellow); }
+  .tag-multa { background: var(--amber-soft); color: var(--amber); }
+  .tag-cliente { background: var(--green-soft); color: var(--green); }
+
+  /* MGMT / TIMELINE */
+  .section-header { margin-bottom: 22px; }
+  .section-header h2 { font-size: 19px; font-weight: 800; margin-bottom: 6px; }
+  .section-header h2 span { color: var(--accent); }
+  .section-header p { font-size: 13px; color: var(--dim); line-height: 1.6; max-width: 640px; }
+
+  .mgmt-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 14px; }
+  .mgmt-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .mgmt-card-icon { font-size: 22px; width: 42px; height: 42px; background: var(--accent-soft); border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .mgmt-card-title { font-size: 14px; font-weight: 700; }
+  .mgmt-card-sub { font-size: 11.5px; color: var(--dim); }
+  .mgmt-points { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .mgmt-points li { font-size: 12.5px; color: var(--dim); display: flex; gap: 8px; line-height: 1.5; }
+  .mgmt-points li::before { content: '→'; color: var(--accent); font-weight: 700; flex-shrink: 0; }
+  .mgmt-points li strong { color: var(--text); }
+
+  .timeline-flow { display: flex; flex-direction: column; gap: 0; position: relative; margin: 8px 0 8px; }
+  .timeline-flow::before { content: ''; position: absolute; left: 21px; top: 20px; bottom: 20px; width: 2px; background: var(--border); }
+  .tf-step { display: flex; gap: 16px; padding: 14px 0; position: relative; z-index: 1; }
+  .tf-dot { width: 42px; height: 42px; border-radius: 50%; background: var(--accent-soft); border: 2px solid var(--accent); display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
+  .tf-time { font-size: 10px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+  .tf-title { font-size: 13.5px; font-weight: 700; margin-bottom: 3px; }
+  .tf-desc { font-size: 12px; color: var(--dim); line-height: 1.5; }
+  .tf-desc strong { color: var(--text); }
+
+  .note-box { background: var(--accent-soft); border: 1px solid #24466f; border-radius: 12px; padding: 16px 18px; font-size: 12.5px; color: var(--dim); line-height: 1.6; }
+  .note-box strong { color: var(--accent); }
+  .pending-box { background: var(--amber-soft); border: 1px solid #6b4a12; border-radius: 12px; padding: 16px 18px; font-size: 12.5px; color: var(--dim); line-height: 1.6; margin-top: 14px; }
+  .pending-box strong { color: var(--amber); }
+</style>
+</head>
+<body>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('panel', event)">🚛 Panel de Conductores</button>
+  <button class="tab" onclick="showTab('ficha', event)">🪪 Ficha del Conductor</button>
+  <button class="tab" onclick="showTab('correos', event)">📧 Correos para Firmar</button>
+  <button class="tab" onclick="showTab('funciona', event)">⚙️ Cómo Funciona</button>
+</div>
+
+<!-- ═══════════ TAB 1: PANEL ═══════════ -->
+<div class="screen active" id="panel">
+  <div class="wrap">
+    <div class="page-header">
+      <div>
+        <h1>Panel de <span>Conductores y Flota</span></h1>
+        <p>Asaf Transportation · Datos y documentación siempre al día</p>
+      </div>
+      <div class="logo-badge">🚛 ASAF TRANSPORTATION</div>
+    </div>
+
+    <div class="kpi-grid" id="kpiGrid"></div>
+
+    <div class="toolbar">
+      <input class="search-input" id="searchInput" type="text" placeholder="Buscar por conductor o matrícula..." oninput="renderTable()">
+      <button class="filter-chip active" data-filter="todos" onclick="setFilter('todos', event)">Todos</button>
+      <button class="filter-chip" data-filter="expired" onclick="setFilter('expired', event)">🔴 Caducados</button>
+      <button class="filter-chip" data-filter="warning" onclick="setFilter('warning', event)">🟡 Próximos a caducar</button>
+      <button class="filter-chip" data-filter="ok" onclick="setFilter('ok', event)">🟢 Al día</button>
+    </div>
+
+    <div class="card">
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Conductor</th>
+              <th>Vehículo</th>
+              <th>Matrícula</th>
+              <th>Próximo vencimiento</th>
+              <th>Documento</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="emptyState" style="display:none;">No hay conductores que coincidan con la búsqueda.</div>
+    </div>
+
+    <div class="note-box">
+      📌 <strong>Esto es una maqueta con datos de ejemplo</strong> para validar el diseño y los campos antes de decidir dónde vivirán los datos reales (app editable, Notion o Google Sheets). Haz clic en cualquier fila para ver la ficha completa del conductor.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ TAB 2: FICHA ═══════════ -->
+<div class="screen" id="ficha">
+  <div class="wrap">
+    <div class="page-header">
+      <div>
+        <h1>Ficha del <span>Conductor</span></h1>
+        <p>Documentación completa, vehículo asignado y vencimientos</p>
+      </div>
+      <div class="logo-badge">🚛 ASAF TRANSPORTATION</div>
+    </div>
+
+    <div class="layout-2col">
+      <div class="card">
+        <div class="driver-list-mini" id="driverListMini"></div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="ficha-top" id="fichaTop"></div>
+          <div class="doc-grid" id="fichaDocs"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ TAB 3: CORREOS ═══════════ -->
+<div class="screen" id="correos">
+  <div class="wrap">
+    <div class="page-header">
+      <div>
+        <h1>Correos <span>Clasificados</span></h1>
+        <p>Así se organizaría la bandeja de entrada por categorías automáticas</p>
+      </div>
+      <div class="logo-badge">🚛 ASAF TRANSPORTATION</div>
+    </div>
+
+    <div class="email-filters" id="emailFilters">
+      <button class="filter-chip active" data-cat="todos" onclick="setEmailFilter('todos', event)">Todos</button>
+      <button class="filter-chip" data-cat="firmar" onclick="setEmailFilter('firmar', event)">🖊️ Para firmar</button>
+      <button class="filter-chip" data-cat="doc" onclick="setEmailFilter('doc', event)">📄 Documentación</button>
+      <button class="filter-chip" data-cat="factura" onclick="setEmailFilter('factura', event)">🧾 Facturas</button>
+      <button class="filter-chip" data-cat="multa" onclick="setEmailFilter('multa', event)">⚠️ Multas / Incidencias</button>
+      <button class="filter-chip" data-cat="cliente" onclick="setEmailFilter('cliente', event)">📦 Clientes / Pedidos</button>
+    </div>
+
+    <div class="card">
+      <div id="emailList"></div>
+    </div>
+
+    <div class="note-box" style="margin-top:16px;">
+      📌 Los correos y remitentes son <strong>ejemplos ilustrativos</strong>. La clasificación real se decidiría con reglas por remitente/palabras clave, o con automatización directa sobre el correo de la empresa — a definir en el siguiente paso.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ TAB 4: CÓMO FUNCIONA ═══════════ -->
+<div class="screen" id="funciona">
+  <div class="wrap">
+    <div class="page-header">
+      <div>
+        <h1>Cómo <span>funcionaría el sistema</span></h1>
+        <p>De maqueta a herramienta real de trabajo diario</p>
+      </div>
+      <div class="logo-badge">🚛 ASAF TRANSPORTATION</div>
+    </div>
+
+    <div class="mgmt-card">
+      <div class="mgmt-card-header">
+        <div class="mgmt-card-icon">🪪</div>
+        <div>
+          <div class="mgmt-card-title">Ficha centralizada por conductor</div>
+          <div class="mgmt-card-sub">Todo lo necesario en un solo sitio</div>
+        </div>
+      </div>
+      <ul class="mgmt-points">
+        <li>Datos personales, <strong>vehículo asignado y matrícula</strong> siempre visibles</li>
+        <li>Carnet, CAP, tacógrafo, reconocimiento médico, ITV, seguro y tarjeta de transporte <strong>con fecha de caducidad</strong></li>
+        <li>Un <strong>semáforo de estado</strong> (verde/amarillo/rojo) para ver de un vistazo qué falta renovar</li>
+        <li>Espacio entre <strong>10 y 18 conductores</strong>, pensado para crecer sin complicarse</li>
+      </ul>
+    </div>
+
+    <div class="mgmt-card">
+      <div class="mgmt-card-header">
+        <div class="mgmt-card-icon">⏰</div>
+        <div>
+          <div class="mgmt-card-title">Alertas automáticas de caducidad</div>
+          <div class="mgmt-card-sub">Para no enterarte tarde de nada</div>
+        </div>
+      </div>
+      <div class="timeline-flow">
+        <div class="tf-step">
+          <div class="tf-dot">📅</div>
+          <div class="tf-content">
+            <div class="tf-time">30 días antes</div>
+            <div class="tf-title">Primer aviso</div>
+            <div class="tf-desc">El sistema detecta un documento que caduca en 30 días y lo marca en <strong>amarillo</strong> en el panel.</div>
+          </div>
+        </div>
+        <div class="tf-step">
+          <div class="tf-dot">📲</div>
+          <div class="tf-content">
+            <div class="tf-time">7 días antes</div>
+            <div class="tf-title">Recordatorio directo</div>
+            <div class="tf-desc">Aviso por WhatsApp o email a quien gestione la empresa, indicando <strong>quién, qué documento y cuándo</strong>.</div>
+          </div>
+        </div>
+        <div class="tf-step">
+          <div class="tf-dot">🔴</div>
+          <div class="tf-content">
+            <div class="tf-time">Día de caducidad</div>
+            <div class="tf-title">Marcado como caducado</div>
+            <div class="tf-desc">Pasa a <strong>rojo</strong> en el panel hasta que se actualice con la nueva fecha.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mgmt-card">
+      <div class="mgmt-card-header">
+        <div class="mgmt-card-icon">📧</div>
+        <div>
+          <div class="mgmt-card-title">Correos organizados por categoría</div>
+          <div class="mgmt-card-sub">Para saber qué necesita firma o acción tuya</div>
+        </div>
+      </div>
+      <ul class="mgmt-points">
+        <li><strong>Para firmar:</strong> CMR, nóminas, pólizas, contratos con clientes</li>
+        <li><strong>Documentación:</strong> renovaciones de carnet, CAP, ITV enviadas por conductores o gestorías</li>
+        <li><strong>Facturas:</strong> talleres, proveedores, combustible</li>
+        <li><strong>Multas / incidencias:</strong> notificaciones DGT o partes de accidente</li>
+        <li><strong>Clientes / pedidos:</strong> nuevas rutas y encargos de transporte</li>
+      </ul>
+    </div>
+
+    <div class="mgmt-card">
+      <div class="mgmt-card-header">
+        <div class="mgmt-card-icon">🗂️</div>
+        <div>
+          <div class="mgmt-card-title">Próximos pasos</div>
+          <div class="mgmt-card-sub">Decisiones pendientes para pasar de maqueta a herramienta real</div>
+        </div>
+      </div>
+      <ul class="mgmt-points">
+        <li><strong>Dónde viven los datos:</strong> app editable en el navegador, base de datos en Notion, o Google Sheets — cada una con sus pros/contras de acceso y edición</li>
+        <li><strong>Automatización de correo:</strong> mantenerlo como diseño/plan por ahora, o conectar el correo real de la empresa para clasificar automáticamente</li>
+        <li><strong>Quién carga los datos reales</strong> de los conductores actuales (nombres, matrículas, fechas de caducidad) para sustituir los datos de ejemplo</li>
+      </ul>
+    </div>
+
+    <div class="pending-box">
+      ⚠️ <strong>Pendiente de decidir contigo:</strong> esta maqueta usa datos de ejemplo y correos ilustrativos. En cuanto confirmes dónde deben vivir los datos reales (app / Notion / Sheets) y si quieres automatizar el correo de verdad, se construye la versión funcional.
+    </div>
+  </div>
+</div>
+
+<script>
+  const today = new Date('2026-07-10');
+
+  const drivers = [
+    { name: 'Carlos Méndez', phone: '+34 611 220 145', vehicle: 'Mercedes Actros 1845', plate: '4521 KBM',
+      docs: { 'Carnet C+E': '2029-03-15', 'CAP': '2026-08-02', 'Tacógrafo': '2027-01-10', 'Médico psicotécnico': '2026-07-25', 'ITV vehículo': '2026-09-10', 'Seguro': '2027-02-01', 'Tarjeta transporte': '2028-05-01' } },
+    { name: 'Ana Belén Ferreiro', phone: '+34 622 331 087', vehicle: 'Volvo FH16', plate: '7788 LKT',
+      docs: { 'Carnet C+E': '2026-06-30', 'CAP': '2027-04-01', 'Tacógrafo': '2026-07-15', 'Médico psicotécnico': '2028-01-01', 'ITV vehículo': '2026-07-05', 'Seguro': '2027-03-01', 'Tarjeta transporte': '2029-01-01' } },
+    { name: 'Javier Souto', phone: '+34 633 445 902', vehicle: 'Scania R450', plate: '3345 MPX',
+      docs: { 'Carnet C+E': '2030-01-01', 'CAP': '2028-06-01', 'Tacógrafo': '2026-07-20', 'Médico psicotécnico': '2027-05-01', 'ITV vehículo': '2027-01-01', 'Seguro': '2026-12-01', 'Tarjeta transporte': '2028-01-01' } },
+    { name: 'Miguel Ángel Prieto', phone: '+34 644 118 233', vehicle: 'DAF XF', plate: '9012 NBR',
+      docs: { 'Carnet C+E': '2027-01-01', 'CAP': '2026-07-18', 'Tacógrafo': '2028-01-01', 'Médico psicotécnico': '2026-08-05', 'ITV vehículo': '2027-06-01', 'Seguro': '2026-06-20', 'Tarjeta transporte': '2028-01-01' } },
+    { name: 'Lucía Vázquez', phone: '+34 655 902 411', vehicle: 'Iveco Stralis', plate: '5566 PQD',
+      docs: { 'Carnet C+E': '2029-01-01', 'CAP': '2028-01-01', 'Tacógrafo': '2027-01-01', 'Médico psicotécnico': '2027-06-01', 'ITV vehículo': '2027-03-01', 'Seguro': '2027-01-01', 'Tarjeta transporte': '2029-01-01' } },
+    { name: 'Roberto Cid', phone: '+34 666 219 780', vehicle: 'MAN TGX', plate: '6677 QRS',
+      docs: { 'Carnet C+E': '2026-07-14', 'CAP': '2027-01-01', 'Tacógrafo': '2028-01-01', 'Médico psicotécnico': '2027-01-01', 'ITV vehículo': '2027-01-01', 'Seguro': '2027-01-01', 'Tarjeta transporte': '2028-01-01' } },
+    { name: 'Sara Domínguez', phone: '+34 677 334 592', vehicle: 'Mercedes Actros 1851', plate: '1122 STU',
+      docs: { 'Carnet C+E': '2028-01-01', 'CAP': '2027-01-01', 'Tacógrafo': '2027-01-01', 'Médico psicotécnico': '2027-01-01', 'ITV vehículo': '2026-07-01', 'Seguro': '2027-01-01', 'Tarjeta transporte': '2028-01-01' } },
+    { name: 'Diego Otero', phone: '+34 688 447 216', vehicle: 'Volvo FH', plate: '3344 UVW',
+      docs: { 'Carnet C+E': '2028-01-01', 'CAP': '2026-05-01', 'Tacógrafo': '2027-01-01', 'Médico psicotécnico': '2027-01-01', 'ITV vehículo': '2027-01-01', 'Seguro': '2027-01-01', 'Tarjeta transporte': '2028-01-01' } },
+    { name: 'Patricia Nóvoa', phone: '+34 699 552 340', vehicle: 'Scania S650', plate: '4455 VWX',
+      docs: { 'Carnet C+E': '2028-01-01', 'CAP': '2027-01-01', 'Tacógrafo': '2027-01-01', 'Médico psicotécnico': '2027-01-01', 'ITV vehículo': '2027-01-01', 'Seguro': '2027-01-01', 'Tarjeta transporte': '2028-01-01' } },
+    { name: 'Fernando Castro', phone: '+34 610 887 129', vehicle: 'DAF XG', plate: '5566 WXY',
+      docs: { 'Carnet C+E': '2028-01-01', 'CAP': '2027-01-01', 'Tacógrafo': '2026-07-30', 'Médico psicotécnico': '2027-01-01', 'ITV vehículo': '2027-01-01', 'Seguro': '2027-01-01', 'Tarjeta transporte': '2028-01-01' } },
+    { name: 'Elena Rodríguez', phone: '+34 621 774 508', vehicle: 'Iveco S-Way', plate: '6677 XYZ',
+      docs: { 'Carnet C+E': '2028-01-01', 'CAP': '2027-01-01', 'Tacógrafo': '2027-01-01', 'Médico psicotécnico': '2027-01-01', 'ITV vehículo': '2027-01-01', 'Seguro': '2027-01-01', 'Tarjeta transporte': '2028-01-01' } },
+    { name: 'Antonio Blanco', phone: '+34 632 998 671', vehicle: 'MAN TGS', plate: '7788 YZA',
+      docs: { 'Carnet C+E': '2028-01-01', 'CAP': '2027-01-01', 'Tacógrafo': '2027-01-01', 'Médico psicotécnico': '2026-07-22', 'ITV vehículo': '2027-01-01', 'Seguro': '2027-01-01', 'Tarjeta transporte': '2028-01-01' } },
+    { name: 'Cristina Pérez', phone: '+34 643 116 802', vehicle: 'Mercedes Arocs', plate: '8899 ZAB',
+      docs: { 'Carnet C+E': '2028-01-01', 'CAP': '2027-01-01', 'Tacógrafo': '2027-01-01', 'Médico psicotécnico': '2027-01-01', 'ITV vehículo': '2027-01-01', 'Seguro': '2027-01-01', 'Tarjeta transporte': '2028-01-01' } },
+    { name: 'Manuel Lorenzo', phone: '+34 654 223 917', vehicle: 'Renault T', plate: '9900 ABC',
+      docs: { 'Carnet C+E': '2026-06-15', 'CAP': '2027-01-01', 'Tacógrafo': '2027-01-01', 'Médico psicotécnico': '2027-01-01', 'ITV vehículo': '2027-01-01', 'Seguro': '2027-01-01', 'Tarjeta transporte': '2028-01-01' } },
+  ];
+
+  function initials(name) {
+    return name.split(' ').map(w => w[0]).slice(0,2).join('').toUpperCase();
+  }
+  function daysUntil(dateStr) {
+    return Math.round((new Date(dateStr) - today) / 86400000);
+  }
+  function statusOf(days) {
+    if (days < 0) return 'expired';
+    if (days <= 30) return 'warning';
+    return 'ok';
+  }
+  function statusLabel(s) {
+    return s === 'expired' ? 'Caducado' : s === 'warning' ? 'Próximo a caducar' : 'Al día';
+  }
+  function nearestDoc(driver) {
+    let best = null;
+    for (const [label, date] of Object.entries(driver.docs)) {
+      const d = daysUntil(date);
+      if (!best || d < best.days) best = { label, date, days: d };
+    }
+    return best;
+  }
+
+  let activeFilter = 'todos';
+
+  function setFilter(f, ev) {
+    activeFilter = f;
+    document.querySelectorAll('#panel .filter-chip').forEach(c => c.classList.remove('active'));
+    ev.target.classList.add('active');
+    renderTable();
+  }
+
+  function renderKPIs() {
+    let ok = 0, warning = 0, expired = 0;
+    drivers.forEach(d => Object.values(d.docs).forEach(date => {
+      const s = statusOf(daysUntil(date));
+      if (s === 'ok') ok++; else if (s === 'warning') warning++; else expired++;
+    }));
+    document.getElementById('kpiGrid').innerHTML = `
+      <div class="kpi blue"><div class="label">Conductores</div><div class="value">${drivers.length}</div><div class="sub">Flota activa</div></div>
+      <div class="kpi green"><div class="label">Documentos al día</div><div class="value">${ok}</div><div class="sub">de ${ok+warning+expired} documentos totales</div></div>
+      <div class="kpi yellow"><div class="label">Próximos a caducar</div><div class="value">${warning}</div><div class="sub">en los próximos 30 días</div></div>
+      <div class="kpi red"><div class="label">Caducados</div><div class="value">${expired}</div><div class="sub">requieren acción inmediata</div></div>
+    `;
+  }
+
+  function renderTable() {
+    const q = document.getElementById('searchInput').value.trim().toLowerCase();
+    let rows = drivers.map(d => ({ driver: d, nearest: nearestDoc(d) }));
+    rows = rows.filter(r => {
+      const matchesSearch = !q || r.driver.name.toLowerCase().includes(q) || r.driver.plate.toLowerCase().includes(q);
+      const matchesFilter = activeFilter === 'todos' || statusOf(r.nearest.days) === activeFilter;
+      return matchesSearch && matchesFilter;
+    });
+    rows.sort((a, b) => a.nearest.days - b.nearest.days);
+
+    const tbody = document.getElementById('tableBody');
+    document.getElementById('emptyState').style.display = rows.length ? 'none' : 'block';
+    tbody.innerHTML = rows.map(r => {
+      const s = statusOf(r.nearest.days);
+      const dayTxt = r.nearest.days < 0 ? `Caducó hace ${Math.abs(r.nearest.days)} días` : `En ${r.nearest.days} días`;
+      return `
+        <tr onclick="openFicha('${r.driver.name.replace(/'/g,"\\'")}')">
+          <td><div class="driver-cell"><div class="avatar">${initials(r.driver.name)}</div><div><div class="driver-name">${r.driver.name}</div><div class="driver-sub">${r.driver.phone}</div></div></div></td>
+          <td>${r.driver.vehicle}</td>
+          <td><span class="plate">${r.driver.plate}</span></td>
+          <td>${r.nearest.date} <span class="driver-sub">· ${dayTxt}</span></td>
+          <td>${r.nearest.label}</td>
+          <td><span class="badge ${s}"><span class="badge-dot"></span>${statusLabel(s)}</span></td>
+        </tr>`;
+    }).join('');
+  }
+
+  let currentFichaName = drivers[0].name;
+
+  function renderMiniList() {
+    document.getElementById('driverListMini').innerHTML = drivers.map(d => {
+      const n = nearestDoc(d);
+      const s = statusOf(n.days);
+      const active = d.name === currentFichaName ? 'active' : '';
+      return `
+        <div class="mini-row ${active}" onclick="openFicha('${d.name.replace(/'/g,"\\'")}')">
+          <div class="mini-avatar">${initials(d.name)}</div>
+          <div><div class="mini-name">${d.name}</div><div class="mini-sub">${d.plate}</div></div>
+          <div class="status-dot ${s}"></div>
+        </div>`;
+    }).join('');
+  }
+
+  function renderFicha() {
+    const d = drivers.find(x => x.name === currentFichaName) || drivers[0];
+    const n = nearestDoc(d);
+    const s = statusOf(n.days);
+    document.getElementById('fichaTop').innerHTML = `
+      <div class="ficha-avatar">${initials(d.name)}</div>
+      <div>
+        <div class="ficha-name">${d.name}</div>
+        <span class="badge ${s}"><span class="badge-dot"></span>${statusLabel(s)}</span>
+        <div class="ficha-meta">
+          <span>📞 <strong>${d.phone}</strong></span>
+          <span>🚛 <strong>${d.vehicle}</strong></span>
+          <span>🔖 Matrícula <strong>${d.plate}</strong></span>
+        </div>
+      </div>
+    `;
+    document.getElementById('fichaDocs').innerHTML = Object.entries(d.docs).map(([label, date]) => {
+      const days = daysUntil(date);
+      const st = statusOf(days);
+      const dayTxt = days < 0 ? `Caducado hace ${Math.abs(days)} días` : `Caduca en ${days} días`;
+      return `
+        <div class="doc-item">
+          <div class="doc-item-top"><span class="doc-label">${label}</span><span class="badge ${st}"><span class="badge-dot"></span>${statusLabel(st)}</span></div>
+          <div class="doc-date">${date}</div>
+          <div class="doc-days">${dayTxt}</div>
+        </div>`;
+    }).join('');
+  }
+
+  function openFicha(name) {
+    currentFichaName = name;
+    renderMiniList();
+    renderFicha();
+    showTabById('ficha');
+  }
+
+  function showTabById(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.tab').forEach(t => { if (t.getAttribute('onclick').includes(`'${id}'`)) t.classList.add('active'); });
+    window.scrollTo(0,0);
+  }
+
+  function showTab(id, ev) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if (ev) ev.target.classList.add('active');
+    window.scrollTo(0,0);
+  }
+
+  // ── EMAILS ──
+  const emails = [
+    { sender: 'Mercadona Logística', subject: 'CMR pendiente de firma — Envío #44521', snippet: 'Adjuntamos la carta de porte del envío del 8/07, necesitamos su firma para cerrar la entrega...', date: 'hoy 09:12', cat: 'firmar', icon: '🖊️' },
+    { sender: 'Gestoría Fiscal Ourense', subject: 'Nóminas julio — Necesitan tu firma', snippet: 'Adjuntamos las nóminas del mes para revisión y firma antes del día 15...', date: 'hoy 08:40', cat: 'firmar', icon: '🖊️' },
+    { sender: 'Correduría de Seguros ABC', subject: 'Renovación póliza de flota — Firma antes del 31/07', snippet: 'La renovación de la póliza de la flota está lista, se requiere firma del tomador...', date: 'ayer 17:05', cat: 'firmar', icon: '🖊️' },
+    { sender: 'Carlos Méndez (conductor)', subject: 'Escaneo carnet C+E renovado', snippet: 'Buenas, aquí os paso el escaneo del carnet renovado como me pedisteis...', date: 'ayer 12:20', cat: 'doc', icon: '📄' },
+    { sender: 'ITV Ourense', subject: 'Cita ITV confirmada — matrícula 7788 LKT', snippet: 'Le confirmamos la cita de inspección técnica para el vehículo con matrícula...', date: 'ayer 10:02', cat: 'doc', icon: '📄' },
+    { sender: 'Taller Mecánico Souto', subject: 'Factura reparación Volvo FH16 — 7788 LKT', snippet: 'Adjuntamos factura por reparación de frenos y revisión general...', date: 'lun 16:44', cat: 'factura', icon: '🧾' },
+    { sender: 'Repsol Flotas', subject: 'Factura mensual combustible — junio', snippet: 'Su factura de consumo de combustible de la flota correspondiente a junio ya está disponible...', date: 'lun 09:15', cat: 'factura', icon: '🧾' },
+    { sender: 'DGT Notificaciones', subject: 'Notificación de sanción — matrícula 5566 PQD', snippet: 'Se ha registrado una notificación de tráfico asociada al vehículo con matrícula...', date: 'dom 19:30', cat: 'multa', icon: '⚠️' },
+    { sender: 'Zara Distribución', subject: 'Nuevo pedido de transporte — Ruta Ourense–Madrid', snippet: 'Solicitamos servicio de transporte para la semana que viene, ruta habitual...', date: 'vie 14:12', cat: 'cliente', icon: '📦' },
+    { sender: 'Leroy Merlin Logística', subject: 'Confirmación de recogida — Almacén Vigo', snippet: 'Confirmamos la recogida programada para el próximo lunes en el almacén de Vigo...', date: 'vie 11:03', cat: 'cliente', icon: '📦' },
+  ];
+
+  let activeEmailCat = 'todos';
+
+  function setEmailFilter(cat, ev) {
+    activeEmailCat = cat;
+    document.querySelectorAll('#correos .filter-chip').forEach(c => c.classList.remove('active'));
+    ev.target.classList.add('active');
+    renderEmails();
+  }
+
+  const tagClass = { firmar: 'tag-firmar', doc: 'tag-doc', factura: 'tag-factura', multa: 'tag-multa', cliente: 'tag-cliente' };
+  const tagLabel = { firmar: '🖊️ Para firmar', doc: '📄 Documentación', factura: '🧾 Factura', multa: '⚠️ Multa/Incidencia', cliente: '📦 Cliente/Pedido' };
+  const iconBg = { firmar: 'var(--red-soft)', doc: 'var(--accent-soft)', factura: 'var(--yellow-soft)', multa: 'var(--amber-soft)', cliente: 'var(--green-soft)' };
+
+  function renderEmails() {
+    const list = emails.filter(e => activeEmailCat === 'todos' || e.cat === activeEmailCat);
+    document.getElementById('emailList').innerHTML = list.map(e => `
+      <div class="email-item">
+        <div class="email-icon" style="background:${iconBg[e.cat]}">${e.icon}</div>
+        <div class="email-body">
+          <div class="email-top"><span class="email-sender">${e.sender}</span><span class="email-date">${e.date}</span></div>
+          <div class="email-subject">${e.subject}</div>
+          <div class="email-snippet">${e.snippet}</div>
+          <span class="email-tag ${tagClass[e.cat]}">${tagLabel[e.cat]}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  renderKPIs();
+  renderTable();
+  renderMiniList();
+  renderFicha();
+  renderEmails();
+</script>
+</body>
+</html>
