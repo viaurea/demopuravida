@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sitemap provisional para la demo. Antes de publicar en el dominio
+  definitivo: sustituye <loc> por la URL real y añade una entrada por
+  cada sección/página adicional que se cree.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://mudanzas-galicia-demo.vercel.app/</loc>
+    <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>

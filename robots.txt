@@ -1,0 +1,12 @@
+# Esta es la URL de DEMO (mudanzas-galicia-demo.vercel.app).
+# Mientras el sitio viva aquí, bloqueamos el rastreo por completo para
+# que no compita en buscadores con la web real de Mudanzas Galicia Exprés.
+User-agent: *
+Disallow: /
+
+# Cuando el sitio pase al dominio definitivo:
+#   1. Sustituye las dos líneas de arriba por reglas normales, p. ej.:
+#        User-agent: *
+#        Allow: /
+#   2. Actualiza la URL del sitemap de abajo al dominio final.
+Sitemap: https://mudanzas-galicia-demo.vercel.app/sitemap.xml
