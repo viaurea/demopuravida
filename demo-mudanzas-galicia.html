@@ -118,29 +118,38 @@
     backdrop-filter: blur(6px);
     border-bottom: 1px solid rgba(255,255,255,.08);
   }
-  nav.wrap { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; gap: 20px; }
-  .logo { display: flex; align-items: center; gap: 12px; color: #fff; }
-  .logo-mark { width: 42px; height: 42px; flex-shrink: 0; }
-  .logo-text { font-family: "Big Shoulders", sans-serif; font-weight: 800; text-transform: uppercase; line-height: 0.9; }
-  .logo-text .l1 { font-size: 19px; letter-spacing: 0.5px; color: #fff; display: block; }
-  .logo-text .l2 { font-size: 13px; letter-spacing: 2px; color: var(--accent); display: block; margin-top: 2px; }
-  .nav-links { display: none; gap: 30px; font-size: 14.5px; font-weight: 600; color: #d7e3ee; }
-  .nav-links a { padding: 6px 0; border-bottom: 2px solid transparent; }
+  nav.wrap { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; gap: 20px; min-height: 76px; }
+  .logo { display: flex; align-items: center; gap: 13px; color: #fff; flex-shrink: 0; }
+  .logo-mark { width: 40px; height: 40px; flex-shrink: 0; }
+  .logo-text { font-family: "Big Shoulders", sans-serif; font-weight: 800; text-transform: uppercase; line-height: 0.95; }
+  .logo-text .l1 { font-size: 19px; letter-spacing: 0.4px; color: #fff; display: block; }
+  .logo-text .l2 { font-size: 12px; letter-spacing: 2.2px; color: var(--accent); display: block; margin-top: 3px; }
+  .nav-links { display: none; gap: 30px; font-size: 14px; font-weight: 600; letter-spacing: .1px; color: #d7e3ee; }
+  .nav-links a { padding: 8px 0; border-bottom: 2px solid transparent; white-space: nowrap; }
   .nav-links a:hover { border-color: var(--accent); color: #fff; }
-  .nav-cta { display: none; align-items: center; gap: 12px; }
-  .nav-phone { display: flex; align-items: center; gap: 8px; color: #fff; font-weight: 700; font-family: "Space Mono", monospace; font-size: 14.5px; }
-  .nav-phone .icon { width: 18px; height: 18px; color: var(--amber); }
-  .burger { display: flex; width: 42px; height: 42px; align-items: center; justify-content: center; color: #fff; border-radius: 8px; }
+  .nav-cta { display: none; align-items: center; gap: 20px; }
+  .nav-phone { display: flex; align-items: center; gap: 9px; color: #fff; font-weight: 700; font-family: "Space Mono", monospace; font-size: 14px; padding-right: 20px; border-right: 1px solid rgba(255,255,255,.16); white-space: nowrap; }
+  .nav-phone .icon { width: 17px; height: 17px; color: var(--amber); }
+  .burger { display: flex; width: 42px; height: 42px; align-items: center; justify-content: center; color: #fff; border-radius: 8px; flex-shrink: 0; }
   .burger:hover { background: rgba(255,255,255,.08); }
   .mobile-menu { display: none; flex-direction: column; gap: 2px; background: var(--ink); border-top: 1px solid rgba(255,255,255,.08); padding: 10px 24px 20px; }
   .mobile-menu.open { display: flex; }
-  .mobile-menu a { color: #dbe6ef; padding: 12px 4px; font-weight: 600; border-bottom: 1px solid rgba(255,255,255,.06); }
+  .mobile-menu a { display: flex; align-items: center; gap: 10px; color: #dbe6ef; padding: 12px 4px; font-weight: 600; border-bottom: 1px solid rgba(255,255,255,.06); }
+  .mobile-menu a .icon { width: 17px; height: 17px; color: var(--amber); }
   .mobile-menu .btn { margin-top: 12px; }
 
   @media (min-width: 920px) {
-    .nav-links { display: flex; }
+    nav.wrap { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 28px; padding: 16px 32px; }
+    .nav-links { display: flex; justify-content: center; }
     .nav-cta { display: flex; }
     .burger { display: none; }
+  }
+  @media (min-width: 920px) and (max-width: 1180px) {
+    .nav-links { gap: 18px; }
+  }
+  @media (min-width: 920px) and (max-width: 1120px) {
+    .nav-phone span { display: none; }
+    .nav-phone { padding-right: 14px; }
   }
 
   /* ---------- hero ---------- */
@@ -208,18 +217,20 @@
     padding: 28px 24px;
     position: relative;
     overflow: hidden;
-    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .25s ease, color .25s ease;
   }
   .service-card::before {
     content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px;
     background: linear-gradient(90deg, var(--accent), var(--amber));
     transform: scaleX(0); transform-origin: left; transition: transform .25s ease;
   }
-  .service-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: transparent; }
-  .service-card:hover::before { transform: scaleX(1); }
-  .service-icon { width: 50px; height: 50px; border-radius: 12px; background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; }
+  .service-card:hover, .service-card:focus-within { transform: translateY(-4px); box-shadow: var(--shadow); border-color: transparent; background: var(--navy); color: #fff; }
+  .service-card:hover::before, .service-card:focus-within::before { transform: scaleX(1); }
+  .service-icon { width: 50px; height: 50px; border-radius: 12px; background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; transition: background .25s ease; }
   .service-card h3 { font-family: "Big Shoulders", sans-serif; font-weight: 700; text-transform: uppercase; font-size: 21px; letter-spacing: .3px; margin-bottom: 8px; }
-  .service-card p { color: var(--text-dim); font-size: 14.5px; }
+  .service-card p { color: var(--text-dim); font-size: 14.5px; transition: color .25s ease; }
+  .service-card:hover p, .service-card:focus-within p { color: #cfe0ee; }
+  .service-card:hover .service-icon, .service-card:focus-within .service-icon { background: var(--accent); }
   .service-card.featured { background: var(--navy); color: #fff; border-color: transparent; }
   .service-card.featured .service-icon { background: var(--accent); }
   .service-card.featured p { color: #cfe0ee; }
@@ -260,14 +271,31 @@
   .coverage { display: grid; gap: 40px; }
   @media (min-width: 940px) { .coverage { grid-template-columns: 1fr 1fr; align-items: center; } }
   .coverage-map { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 24px; }
-  .coverage-map svg { width: 100%; height: auto; }
-  .prov { fill: var(--paper-2); stroke: #fff; stroke-width: 2; transition: fill .2s ease; }
-  .prov:hover { fill: var(--navy-3); }
+  .coverage-map svg { width: 100%; height: auto; overflow: visible; }
+  .prov { fill: var(--paper-2); stroke: #fff; stroke-width: 2; cursor: pointer; transition: fill .22s ease, filter .22s ease; }
+  .prov:hover, .prov:focus-visible { fill: var(--navy-3); outline: none; }
   .prov.home { fill: var(--accent); }
-  .hq-pin { fill: var(--ink); }
-  .city-tags { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 22px; }
-  .city-tag { font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 999px; background: var(--paper-2); color: var(--text); }
+  .prov.home:hover, .prov.home:focus-visible { fill: var(--accent-dark); }
+  .prov.selected { filter: drop-shadow(0 6px 14px rgba(11,30,51,.35)); }
+  .prov-label { font-family: "Big Shoulders", sans-serif; font-size: 13px; font-weight: 700; pointer-events: none; }
+  .city-pin { cursor: pointer; }
+  .city-pin .dot { fill: #fff; stroke: var(--navy); stroke-width: 2; transform-box: fill-box; transform-origin: center; transition: transform .18s ease, fill .18s ease, stroke .18s ease; }
+  .city-pin:hover .dot, .city-pin:focus-visible .dot, .city-pin.selected .dot { fill: var(--accent); stroke: #fff; transform: scale(1.5); }
+  .city-pin text { font-family: "Space Mono", monospace; font-size: 9.5px; font-weight: 700; fill: var(--ink); pointer-events: none; }
+  .hq-group circle.hq-core { fill: var(--ink); stroke: #fff; stroke-width: 2.5; }
+  .hq-pulse { fill: none; stroke: var(--amber); stroke-width: 2; transform-box: fill-box; transform-origin: center; animation: hqPulse 2.4s ease-out infinite; }
+  @keyframes hqPulse { 0% { transform: scale(.7); opacity: .9; } 100% { transform: scale(2.6); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .hq-pulse { animation: none; opacity: .5; } }
+  .map-info { margin-top: 20px; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; display: flex; gap: 14px; align-items: flex-start; transition: background .2s ease; }
+  .map-info .badge { width: 36px; height: 36px; border-radius: 10px; background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .map-info .badge .icon { width: 18px; height: 18px; }
+  .map-info h4 { font-family: "Big Shoulders", sans-serif; text-transform: uppercase; font-size: 16.5px; letter-spacing: .3px; color: var(--ink); }
+  .map-info p { font-size: 13.5px; color: var(--text-dim); margin-top: 3px; }
+  .city-tags { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 16px; }
+  .city-tag { font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 999px; background: var(--paper-2); color: var(--text); border: 1.5px solid transparent; transition: all .18s ease; }
+  .city-tag:hover { border-color: var(--navy-3); }
   .city-tag.hq { background: var(--accent); color: #fff; }
+  .city-tag.selected { background: var(--navy); color: #fff; }
   .coverage-list li { display: flex; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); }
   .coverage-list .icon { color: var(--accent); width: 22px; height: 22px; margin-top: 2px; }
   .coverage-list h4 { font-family: "Big Shoulders", sans-serif; text-transform: uppercase; font-size: 17px; letter-spacing: .3px; }
@@ -302,17 +330,27 @@
   .secure-note .icon { width: 15px; height: 15px; }
 
   /* ---------- testimonios ---------- */
+  .testi-viewport { overflow: hidden; }
+  .testi-track { display: flex; transition: transform .55s cubic-bezier(.4,0,.2,1); }
+  .testi-slide { flex: 0 0 100%; min-width: 0; }
   .testi-grid { display: grid; gap: 18px; grid-template-columns: 1fr; }
   @media (min-width: 760px) { .testi-grid { grid-template-columns: repeat(3,1fr); } }
-  .testi-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; }
+  .testi-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; height: 100%; }
   .stars { color: var(--amber); display: flex; gap: 3px; margin-bottom: 14px; }
   .stars .icon { width: 15px; height: 15px; }
   .testi-card p.quote { font-size: 14.8px; color: var(--text); }
   .testi-who { display: flex; align-items: center; gap: 12px; margin-top: 20px; }
-  .avatar { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: "Big Shoulders", sans-serif; font-weight: 700; color: #fff; font-size: 15px; }
+  .avatar { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: "Big Shoulders", sans-serif; font-weight: 700; color: #fff; font-size: 15px; flex-shrink: 0; }
   .testi-who strong { display: block; font-size: 14px; }
   .testi-who span { font-size: 12.5px; color: var(--text-dim); }
-  .testi-note { margin-top: 30px; font-size: 12.5px; color: var(--text-dim); text-align: center; }
+  .testi-nav { display: flex; align-items: center; justify-content: center; gap: 20px; margin-top: 30px; }
+  .testi-arrow { width: 42px; height: 42px; border-radius: 50%; border: 1.5px solid var(--line); background: #fff; display: flex; align-items: center; justify-content: center; color: var(--navy); transition: all .18s ease; flex-shrink: 0; }
+  .testi-arrow:hover { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .testi-arrow .icon { width: 18px; height: 18px; }
+  .testi-dots { display: flex; gap: 8px; }
+  .testi-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--line); transition: all .2s ease; }
+  .testi-dot.active { background: var(--navy); width: 22px; border-radius: 5px; }
+  .testi-note { margin-top: 24px; font-size: 12.5px; color: var(--text-dim); text-align: center; }
 
   /* ---------- formulario ---------- */
   .quote-wrap { display: grid; gap: 40px; }
@@ -363,6 +401,20 @@
   .fab-chat { background: var(--accent); }
   .fab-chat .icon { width: 26px; height: 26px; }
   .fab-ping { position: absolute; top: -3px; right: -3px; width: 15px; height: 15px; border-radius: 50%; background: var(--amber); border: 2px solid var(--ink); }
+  .fab-label {
+    display: flex; align-items: center; gap: 8px; background: #fff; color: var(--ink);
+    padding: 11px 10px 11px 14px; border-radius: 999px; box-shadow: 0 12px 26px -10px rgba(0,0,0,.35);
+    font-size: 13px; font-weight: 700; cursor: pointer; border: 1px solid var(--line); white-space: nowrap;
+    animation: fabLabelIn .5s ease .6s both;
+  }
+  .fab-label:hover { border-color: var(--navy-3); }
+  .fab-label .icon { width: 16px; height: 16px; color: var(--accent); flex-shrink: 0; }
+  .fab-label-close { display: flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; color: var(--text-dim); flex-shrink: 0; }
+  .fab-label-close:hover { background: var(--paper-2); color: var(--ink); }
+  .fab-label-close .icon { width: 12px; height: 12px; color: inherit; }
+  .fab-label.hidden { display: none; }
+  @keyframes fabLabelIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  @media (prefers-reduced-motion: reduce) { .fab-label { animation: none; } }
   .wa-fab { position: fixed; left: 20px; bottom: 20px; z-index: 90; width: 58px; height: 58px; border-radius: 50%; background: var(--whatsapp); color: #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 14px 30px -10px rgba(0,0,0,.4); }
   .wa-fab .icon { width: 27px; height: 27px; }
 
@@ -404,8 +456,10 @@
   .modal-head h3 { font-family: "Big Shoulders", sans-serif; text-transform: uppercase; font-size: 20px; color: var(--ink); }
   .modal-close { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text-dim); }
   .modal-close:hover { background: var(--paper); }
-  .pay-badges { display: flex; gap: 8px; margin-bottom: 18px; }
-  .pay-badges span { font-family: "Space Mono", monospace; font-size: 11px; border: 1px solid var(--line); border-radius: 6px; padding: 5px 9px; color: var(--text-dim); }
+  .pay-badges { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 20px; }
+  .pay-badge { display: flex; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; background: var(--paper); }
+  .pay-badge .glyph { display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .pay-badge span { font-family: "Space Mono", monospace; font-size: 10.5px; font-weight: 700; color: var(--text-dim); letter-spacing: .2px; white-space: nowrap; }
   .modal-success { display: none; text-align: center; padding: 10px 0 6px; }
   .modal-success.show { display: block; }
   .modal-success .icon { width: 50px; height: 50px; color: #fff; background: var(--whatsapp); border-radius: 50%; padding: 12px; margin: 0 auto 16px; }
@@ -449,7 +503,7 @@
       <a href="#opiniones">Opiniones</a>
     </div>
     <div class="nav-cta">
-      <a class="nav-phone" href="tel:+34678551100"><svg class="icon" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .3 2 .7 3a2 2 0 0 1-.5 2.1L8 10a16 16 0 0 0 6 6l1.2-1.3a2 2 0 0 1 2.1-.5c1 .4 2 .6 3 .7a2 2 0 0 1 1.7 2Z"/></svg>678 55 11 00</a>
+      <a class="nav-phone" href="tel:+34678551100"><svg class="icon" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .3 2 .7 3a2 2 0 0 1-.5 2.1L8 10a16 16 0 0 0 6 6l1.2-1.3a2 2 0 0 1 2.1-.5c1 .4 2 .6 3 .7a2 2 0 0 1 1.7 2Z"/></svg><span>678 55 11 00</span></a>
       <a class="btn btn-primary" href="#presupuesto">Pedir presupuesto</a>
     </div>
     <button class="burger" id="burgerBtn" aria-label="Abrir menú">
@@ -462,7 +516,7 @@
     <a href="#porque">Por qué nosotros</a>
     <a href="#cobertura">Cobertura</a>
     <a href="#opiniones">Opiniones</a>
-    <a href="tel:+34678551100">📞 678 55 11 00</a>
+    <a href="tel:+34678551100"><svg class="icon" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .3 2 .7 3a2 2 0 0 1-.5 2.1L8 10a16 16 0 0 0 6 6l1.2-1.3a2 2 0 0 1 2.1-.5c1 .4 2 .6 3 .7a2 2 0 0 1 1.7 2Z"/></svg>678 55 11 00</a>
     <a class="btn btn-primary btn-block" href="#presupuesto">Pedir presupuesto</a>
   </div>
 </header>
@@ -483,9 +537,9 @@
         </a>
       </div>
       <div class="hero-stats">
-        <div><div class="num">+200</div><div class="lbl">Servicios finalizados</div></div>
-        <div><div class="num">100%</div><div class="lbl">Clientes satisfechos</div></div>
-        <div><div class="num">24/7</div><div class="lbl">Disponibilidad</div></div>
+        <div><div class="num count" data-target="200" data-prefix="+">+200</div><div class="lbl">Servicios finalizados</div></div>
+        <div><div class="num count" data-target="100" data-suffix="%">100%</div><div class="lbl">Clientes satisfechos</div></div>
+        <div><div class="num count" data-target="24" data-suffix="/7">24/7</div><div class="lbl">Disponibilidad</div></div>
       </div>
     </div>
     <div class="hero-art" aria-hidden="true">
@@ -627,12 +681,12 @@
       <p style="color:#b9cfe1;">Los mismos motivos por los que 200 familias y empresas ya confiaron en nosotros.</p>
     </div>
     <div class="stat-grid reveal">
-      <div class="stat-cell"><div class="num">+200</div><div class="lbl">Servicios finalizados</div><p>Y sumando, en toda Galicia.</p></div>
-      <div class="stat-cell"><div class="num">100%</div><div class="lbl">Clientes satisfechos</div><p>Valoración media de nuestros servicios.</p></div>
-      <div class="stat-cell"><div class="num">24/7</div><div class="lbl">Disponibilidad real</div><p>Incluidos fines de semana y festivos.</p></div>
-      <div class="stat-cell"><div class="num">&lt;24h</div><div class="lbl">Tiempo de respuesta</div><p>Desde tu solicitud hasta tu presupuesto.</p></div>
-      <div class="stat-cell"><div class="num">0€</div><div class="lbl">Costes ocultos</div><p>Presupuesto cerrado desde el primer día.</p></div>
-      <div class="stat-cell"><div class="num">+15</div><div class="lbl">Años de experiencia</div><p>Cuidando lo que más importa.</p></div>
+      <div class="stat-cell"><div class="num count" data-target="200" data-prefix="+">+200</div><div class="lbl">Servicios finalizados</div><p>Y sumando, en toda Galicia.</p></div>
+      <div class="stat-cell"><div class="num count" data-target="100" data-suffix="%">100%</div><div class="lbl">Clientes satisfechos</div><p>Valoración media de nuestros servicios.</p></div>
+      <div class="stat-cell"><div class="num count" data-target="24" data-suffix="/7">24/7</div><div class="lbl">Disponibilidad real</div><p>Incluidos fines de semana y festivos.</p></div>
+      <div class="stat-cell"><div class="num count" data-target="24" data-prefix="&lt;" data-suffix="h">&lt;24h</div><div class="lbl">Tiempo de respuesta</div><p>Desde tu solicitud hasta tu presupuesto.</p></div>
+      <div class="stat-cell"><div class="num count" data-target="0" data-suffix="€">0€</div><div class="lbl">Costes ocultos</div><p>Presupuesto cerrado desde el primer día.</p></div>
+      <div class="stat-cell"><div class="num count" data-target="15" data-prefix="+">+15</div><div class="lbl">Años de experiencia</div><p>Cuidando lo que más importa.</p></div>
     </div>
   </div>
 </section>
@@ -647,25 +701,54 @@
     </div>
     <div class="coverage">
       <div class="coverage-map reveal">
-        <svg viewBox="0 0 340 300" aria-label="Mapa esquemático de Galicia">
-          <path class="prov" d="M40 30 L160 15 L190 70 L150 110 L70 105 L30 70 Z"/>
-          <path class="prov" d="M160 15 L300 40 L290 110 L190 70 Z"/>
-          <path class="prov home" d="M70 105 L190 70 L230 160 L150 210 L60 190 Z"/>
-          <path class="prov" d="M190 70 L290 110 L260 210 L150 210 L230 160 Z"/>
-          <circle class="hq-pin" cx="128" cy="150" r="7"/>
-          <circle cx="128" cy="150" r="12" fill="none" stroke="#EA6A2E" stroke-width="2"/>
-          <text x="20" y="55" font-family="Big Shoulders, sans-serif" font-size="13" font-weight="700" fill="#123a5c">A CORUÑA</text>
-          <text x="215" y="45" font-family="Big Shoulders, sans-serif" font-size="13" font-weight="700" fill="#123a5c">LUGO</text>
-          <text x="70" y="165" font-family="Big Shoulders, sans-serif" font-size="13" font-weight="700" fill="#fff">OURENSE</text>
-          <text x="185" y="155" font-family="Big Shoulders, sans-serif" font-size="13" font-weight="700" fill="#123a5c">PONTEVEDRA</text>
+        <svg viewBox="0 0 340 300" aria-label="Mapa interactivo esquemático de Galicia">
+          <path class="prov" data-prov="coruna" tabindex="0" role="button" aria-label="A Coruña" d="M40 30 L160 15 L190 70 L150 110 L70 105 L30 70 Z"/>
+          <path class="prov" data-prov="lugo" tabindex="0" role="button" aria-label="Lugo" d="M160 15 L300 40 L290 110 L190 70 Z"/>
+          <path class="prov home" data-prov="ourense" tabindex="0" role="button" aria-label="Ourense, sede central" d="M70 105 L190 70 L230 160 L150 210 L60 190 Z"/>
+          <path class="prov" data-prov="pontevedra" tabindex="0" role="button" aria-label="Pontevedra" d="M190 70 L290 110 L260 210 L150 210 L230 160 Z"/>
+
+          <text class="prov-label" x="20" y="55" fill="#123a5c">A CORUÑA</text>
+          <text class="prov-label" x="215" y="45" fill="#123a5c">LUGO</text>
+          <text class="prov-label" x="70" y="165" fill="#fff">OURENSE</text>
+          <text class="prov-label" x="185" y="155" fill="#123a5c">PONTEVEDRA</text>
+
+          <g class="city-pin" data-prov="coruna" tabindex="0" role="button" aria-label="A Coruña ciudad" transform="translate(62,52)">
+            <circle class="dot" r="5"/><text x="9" y="4">A Coruña</text>
+          </g>
+          <g class="city-pin" data-prov="coruna" tabindex="0" role="button" aria-label="Santiago de Compostela" transform="translate(118,82)">
+            <circle class="dot" r="5"/><text x="9" y="4">Santiago</text>
+          </g>
+          <g class="city-pin" data-prov="lugo" tabindex="0" role="button" aria-label="Lugo ciudad" transform="translate(228,55)">
+            <circle class="dot" r="5"/><text x="9" y="4">Lugo</text>
+          </g>
+          <g class="city-pin" data-prov="pontevedra" tabindex="0" role="button" aria-label="Vigo" transform="translate(198,178)">
+            <circle class="dot" r="5"/><text x="-45" y="4">Vigo</text>
+          </g>
+          <g class="city-pin" data-prov="pontevedra" tabindex="0" role="button" aria-label="Pontevedra ciudad" transform="translate(238,138)">
+            <circle class="dot" r="5"/><text x="9" y="4">Pontevedra</text>
+          </g>
+
+          <g class="hq-group" data-prov="ourense" tabindex="0" role="button" aria-label="Ourense capital, sede" transform="translate(128,150)">
+            <circle class="hq-pulse" r="8"/>
+            <circle class="hq-core" r="7"/>
+          </g>
         </svg>
-        <div class="city-tags">
-          <span class="city-tag hq">Ourense capital (base)</span>
-          <span class="city-tag">Vigo</span>
-          <span class="city-tag">Santiago</span>
-          <span class="city-tag">Lugo</span>
-          <span class="city-tag">A Coruña</span>
-          <span class="city-tag">Pontevedra</span>
+
+        <div class="map-info" id="mapInfo">
+          <div class="badge"><svg class="icon" viewBox="0 0 24 24"><path d="M12 21s-7-6-7-12a7 7 0 0 1 14 0c0 6-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
+          <div>
+            <h4 id="mapInfoTitle">Ourense (sede central)</h4>
+            <p id="mapInfoText">Nuestra base de operaciones: aquí concentramos la mayor frecuencia de servicios y salidas el mismo día.</p>
+          </div>
+        </div>
+
+        <div class="city-tags" id="cityTags">
+          <span class="city-tag hq" data-prov="ourense">Ourense capital (base)</span>
+          <span class="city-tag" data-prov="pontevedra">Vigo</span>
+          <span class="city-tag" data-prov="coruna">Santiago</span>
+          <span class="city-tag" data-prov="lugo">Lugo</span>
+          <span class="city-tag" data-prov="coruna">A Coruña</span>
+          <span class="city-tag" data-prov="pontevedra">Pontevedra</span>
           <span class="city-tag">Fuera de Galicia (a consultar)</span>
         </div>
       </div>
@@ -717,31 +800,73 @@
       <div class="eyebrow">OPINIONES</div>
       <h2 class="h-display">Lo que dicen quienes ya se mudaron con nosotros</h2>
     </div>
-    <div class="testi-grid reveal">
-      <div class="testi-card">
-        <div class="stars">★★★★★</div>
-        <p class="quote">"Presupuesto cerrado desde el primer momento, sin ninguna sorpresa al final. El equipo cuidó cada mueble como si fuera suyo."</p>
-        <div class="testi-who">
-          <div class="avatar" style="background:var(--navy);">MR</div>
-          <div><strong>Marta R.</strong><span>Mudanza de vivienda · Ourense</span></div>
+    <div class="testi-viewport reveal" id="testiViewport">
+      <div class="testi-track" id="testiTrack">
+        <div class="testi-slide">
+          <div class="testi-grid">
+            <div class="testi-card">
+              <div class="stars"><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg></div>
+              <p class="quote">"Presupuesto cerrado desde el primer momento, sin ninguna sorpresa al final. El equipo cuidó cada mueble como si fuera suyo."</p>
+              <div class="testi-who">
+                <div class="avatar" style="background:var(--navy);">MR</div>
+                <div><strong>Marta R.</strong><span>Mudanza de vivienda · Ourense</span></div>
+              </div>
+            </div>
+            <div class="testi-card">
+              <div class="stars"><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg></div>
+              <p class="quote">"Trasladamos la oficina un fin de semana y el lunes estábamos operativos sin perder ni una hora de trabajo."</p>
+              <div class="testi-who">
+                <div class="avatar" style="background:var(--accent);">XL</div>
+                <div><strong>Xosé L.</strong><span>Mudanza de oficina · Vigo</span></div>
+              </div>
+            </div>
+            <div class="testi-card">
+              <div class="stars"><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg></div>
+              <p class="quote">"Nos movieron un piano de cola sin un solo rasguño. Se nota que saben lo que hacen con objetos delicados."</p>
+              <div class="testi-who">
+                <div class="avatar" style="background:var(--amber);">CF</div>
+                <div><strong>Carmen F.</strong><span>Transporte delicado · Santiago</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-slide">
+          <div class="testi-grid">
+            <div class="testi-card">
+              <div class="stars"><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg></div>
+              <p class="quote">"Nos dieron el presupuesto por escrito antes de empezar y no cambió ni un euro. Se agradece esa transparencia."</p>
+              <div class="testi-who">
+                <div class="avatar" style="background:var(--navy-3);">IP</div>
+                <div><strong>Iván P.</strong><span>Mudanza urgente · A Coruña</span></div>
+              </div>
+            </div>
+            <div class="testi-card">
+              <div class="stars"><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg></div>
+              <p class="quote">"Desmontaron y volvieron a montar todo el dormitorio en menos de una hora. Un lujo no preocuparse de nada."</p>
+              <div class="testi-who">
+                <div class="avatar" style="background:var(--accent-dark);">LS</div>
+                <div><strong>Laura S.</strong><span>Desmontaje y montaje · Pontevedra</span></div>
+              </div>
+            </div>
+            <div class="testi-card">
+              <div class="stars"><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg><svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.4 7 .8-5.2 4.8 1.5 6.9L12 17.6 5.8 20.9l1.5-6.9L2.1 9.2l7-.8L12 2z"/></svg></div>
+              <p class="quote">"Embalaron la vajilla de mi abuela con un cuidado que no esperaba. Llegó absolutamente todo entero."</p>
+              <div class="testi-who">
+                <div class="avatar" style="background:var(--navy);">MV</div>
+                <div><strong>Manuel V.</strong><span>Embalaje técnico · Lugo</span></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="testi-card">
-        <div class="stars">★★★★★</div>
-        <p class="quote">"Trasladamos la oficina un fin de semana y el lunes estábamos operativos sin perder ni una hora de trabajo."</p>
-        <div class="testi-who">
-          <div class="avatar" style="background:var(--accent);">XL</div>
-          <div><strong>Xosé L.</strong><span>Mudanza de oficina · Vigo</span></div>
-        </div>
+    </div>
+    <div class="testi-nav">
+      <button class="testi-arrow" id="testiPrev" aria-label="Opiniones anteriores"><svg class="icon" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="testi-dots" id="testiDots">
+        <button class="testi-dot active" aria-label="Grupo de opiniones 1"></button>
+        <button class="testi-dot" aria-label="Grupo de opiniones 2"></button>
       </div>
-      <div class="testi-card">
-        <div class="stars">★★★★★</div>
-        <p class="quote">"Nos movieron un piano de cola sin un solo rasguño. Se nota que saben lo que hacen con objetos delicados."</p>
-        <div class="testi-who">
-          <div class="avatar" style="background:var(--amber);">CF</div>
-          <div><strong>Carmen F.</strong><span>Transporte delicado · Santiago</span></div>
-        </div>
-      </div>
+      <button class="testi-arrow" id="testiNext" aria-label="Opiniones siguientes"><svg class="icon" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
     </div>
     <p class="testi-note">Testimonios de ejemplo con fines ilustrativos para esta demo.</p>
   </div>
@@ -816,8 +941,8 @@
       <div>
         <h5>Contacto</h5>
         <ul>
-          <li><a href="tel:+34678551100">📞 678 55 11 00</a></li>
-          <li><a href="https://wa.me/34678551100" target="_blank" rel="noopener">💬 WhatsApp directo</a></li>
+          <li><a href="tel:+34678551100" style="display:flex;align-items:center;gap:9px;"><svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px;color:var(--amber);"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .3 2 .7 3a2 2 0 0 1-.5 2.1L8 10a16 16 0 0 0 6 6l1.2-1.3a2 2 0 0 1 2.1-.5c1 .4 2 .6 3 .7a2 2 0 0 1 1.7 2Z"/></svg>678 55 11 00</a></li>
+          <li><a href="https://wa.me/34678551100" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:9px;"><svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px;color:var(--whatsapp);" fill="currentColor" stroke="none"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.7.8-.8 1-.2.2-.3.2-.5.1-.2-.1-1-.4-1.9-1.2-.7-.6-1.2-1.4-1.3-1.6-.1-.2 0-.4.1-.5l.4-.5c.1-.1.2-.3.2-.4.1-.2 0-.3 0-.4-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9 0 1.1.8 2.2.9 2.4.1.2 1.6 2.5 4 3.4.6.2 1 .4 1.3.5.6.2 1.1.1 1.5-.1.5-.2 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2-.1-.1-.2-.2-.4-.3Z"/></svg>WhatsApp directo</a></li>
           <li>Ourense · toda Galicia</li>
         </ul>
       </div>
@@ -854,6 +979,13 @@
 </a>
 
 <div class="fab-stack">
+  <div class="fab-label" id="fabLabel" onclick="openChat()">
+    <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    Asistente Galicia Exprés
+    <button class="fab-label-close" aria-label="Ocultar aviso" onclick="event.stopPropagation(); document.getElementById('fabLabel').classList.add('hidden');">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
   <button class="fab fab-chat" id="chatFab" onclick="openChat()" aria-label="Abrir asistente de presupuesto">
     <span class="fab-ping"></span>
     <svg class="icon" viewBox="0 0 24 24" stroke="#fff"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -877,7 +1009,24 @@
         <h3>Pago de señal</h3>
         <button class="modal-close" onclick="closePayModal()" aria-label="Cerrar"><svg class="icon" viewBox="0 0 24 24" style="width:18px;height:18px;"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
       </div>
-      <div class="pay-badges"><span>VISA</span><span>MASTERCARD</span><span>STRIPE</span><span>SSL 256-bit</span></div>
+      <div class="pay-badges">
+        <div class="pay-badge">
+          <svg class="glyph" width="26" height="18" viewBox="0 0 26 18"><rect x="1" y="1" width="24" height="16" rx="3" fill="none" stroke="#123a5c" stroke-width="1.6"/><rect x="1" y="5" width="24" height="3" fill="#123a5c"/><rect x="4" y="11" width="7" height="2" rx="1" fill="#123a5c"/></svg>
+          <span>TARJETA</span>
+        </div>
+        <div class="pay-badge">
+          <svg class="glyph" width="26" height="18" viewBox="0 0 26 18"><circle cx="9" cy="9" r="7" fill="#123a5c" opacity=".88"/><circle cx="17" cy="9" r="7" fill="#ea6a2e" opacity=".88"/></svg>
+          <span>TODAS LAS REDES</span>
+        </div>
+        <div class="pay-badge">
+          <svg class="glyph" width="18" height="18" viewBox="0 0 24 24" fill="#ea6a2e"><path d="M13 2 3 14h7l-1 8 11-14h-7z"/></svg>
+          <span>PAGO INSTANTÁNEO</span>
+        </div>
+        <div class="pay-badge">
+          <svg class="glyph" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#123a5c" stroke-width="1.8"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          <span>SSL 256-BIT</span>
+        </div>
+      </div>
       <form id="payForm">
         <div class="form-grid">
           <div class="field"><label>Titular de la tarjeta</label><input required placeholder="Nombre como aparece en la tarjeta"></div>
@@ -919,6 +1068,85 @@
   } else {
     revealEls.forEach(function (el) { el.classList.add('in'); });
   }
+
+  // ---- animated count-up stats on scroll ----
+  var reducedMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function formatStat(el, val) { return (el.dataset.prefix || '') + val + (el.dataset.suffix || ''); }
+  function animateCount(el) {
+    var target = parseFloat(el.dataset.target);
+    if (isNaN(target)) return;
+    if (reducedMotion) { el.textContent = formatStat(el, target); return; }
+    var dur = 1200, start = null;
+    function step(ts) {
+      if (!start) start = ts;
+      var p = Math.min(1, (ts - start) / dur);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = formatStat(el, Math.round(target * eased));
+      if (p < 1) requestAnimationFrame(step); else el.textContent = formatStat(el, target);
+    }
+    requestAnimationFrame(step);
+  }
+  var countEls = document.querySelectorAll('.num.count');
+  if ('IntersectionObserver' in window) {
+    var countIo = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.textContent = formatStat(e.target, 0);
+          animateCount(e.target);
+          countIo.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.6 });
+    countEls.forEach(function (el) { countIo.observe(el); });
+  }
+
+  // ---- interactive coverage map ----
+  var provData = {
+    ourense: { title: 'Ourense (sede central)', text: 'Nuestra base de operaciones: aquí concentramos la mayor frecuencia de servicios y salidas el mismo día.' },
+    coruna: { title: 'A Coruña', text: 'Rías Altas, área metropolitana y Santiago de Compostela, con rutas programadas desde Ourense.' },
+    lugo: { title: 'Lugo', text: 'Norte e interior de Galicia. Servicio habitual, ideal para combinar con paradas en A Coruña.' },
+    pontevedra: { title: 'Pontevedra y Vigo', text: 'Una de nuestras rutas más solicitadas: Rías Baixas, Vigo y Pontevedra capital.' }
+  };
+  var mapInfoTitle = document.getElementById('mapInfoTitle');
+  var mapInfoText = document.getElementById('mapInfoText');
+  function selectProv(key) {
+    if (!key || !provData[key]) return;
+    document.querySelectorAll('.prov').forEach(function (p) { p.classList.toggle('selected', p.getAttribute('data-prov') === key); });
+    document.querySelectorAll('.city-pin').forEach(function (p) { p.classList.toggle('selected', p.getAttribute('data-prov') === key); });
+    document.querySelectorAll('.city-tag[data-prov]').forEach(function (t) { t.classList.toggle('selected', t.getAttribute('data-prov') === key); });
+    mapInfoTitle.textContent = provData[key].title;
+    mapInfoText.textContent = provData[key].text;
+  }
+  document.querySelectorAll('.prov, .city-pin, .hq-group').forEach(function (el) {
+    el.addEventListener('click', function () { selectProv(el.getAttribute('data-prov')); });
+    el.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectProv(el.getAttribute('data-prov')); }
+    });
+  });
+  document.querySelectorAll('.city-tag[data-prov]').forEach(function (t) {
+    t.addEventListener('click', function () { selectProv(t.getAttribute('data-prov')); });
+  });
+
+  // ---- testimonials carousel (3 at a time) ----
+  var testiTrack = document.getElementById('testiTrack');
+  var testiDots = document.querySelectorAll('.testi-dot');
+  var testiTotal = document.querySelectorAll('.testi-slide').length;
+  var testiIndex = 0;
+  function goToTesti(i) {
+    testiIndex = (i + testiTotal) % testiTotal;
+    testiTrack.style.transform = 'translateX(-' + (testiIndex * 100) + '%)';
+    testiDots.forEach(function (d, idx) { d.classList.toggle('active', idx === testiIndex); });
+  }
+  document.getElementById('testiPrev').addEventListener('click', function () { goToTesti(testiIndex - 1); });
+  document.getElementById('testiNext').addEventListener('click', function () { goToTesti(testiIndex + 1); });
+  testiDots.forEach(function (d, idx) { d.addEventListener('click', function () { goToTesti(idx); }); });
+  var testiAutoplay;
+  function startTestiAutoplay() { if (!reducedMotion) testiAutoplay = setInterval(function () { goToTesti(testiIndex + 1); }, 6000); }
+  function stopTestiAutoplay() { clearInterval(testiAutoplay); }
+  var testiViewport = document.getElementById('testiViewport');
+  testiViewport.addEventListener('mouseenter', stopTestiAutoplay);
+  testiViewport.addEventListener('mouseleave', startTestiAutoplay);
+  startTestiAutoplay();
 
   // ---- volume calculator ----
   var calcChips = document.getElementById('calcChips');
@@ -969,6 +1197,7 @@
 
   function openChat() {
     document.getElementById('chatPanel').classList.add('open');
+    document.getElementById('fabLabel').classList.add('hidden');
     if (!chatBody.hasChildNodes()) restartChat();
   }
   function closeChat() { document.getElementById('chatPanel').classList.remove('open'); }
@@ -1020,7 +1249,7 @@
   function restartChat() {
     chatState = {};
     chatBody.innerHTML = '';
-    addBubble('bot', '¡Hola! 👋 Soy el asistente de Mudanzas Galicia Exprés. Te ayudo a calcular un presupuesto orientativo en 4 preguntas rápidas.');
+    addBubble('bot', '¡Hola! Soy el asistente de Mudanzas Galicia Exprés. Te ayudo a calcular un presupuesto orientativo en 4 preguntas rápidas.');
     setTimeout(stepType, 300);
   }
 
