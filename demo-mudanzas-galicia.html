@@ -272,11 +272,9 @@
   @media (min-width: 940px) { .coverage { grid-template-columns: 1fr 1fr; align-items: center; } }
   .coverage-map { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 24px; }
   .coverage-map svg { width: 100%; height: auto; overflow: visible; }
-  .prov { fill: var(--paper-2); stroke: #fff; stroke-width: 2; cursor: pointer; transition: fill .22s ease, filter .22s ease; }
-  .prov:hover, .prov:focus-visible { fill: var(--navy-3); outline: none; }
-  .prov.home { fill: var(--accent); }
-  .prov.home:hover, .prov.home:focus-visible { fill: var(--accent-dark); }
-  .prov.selected { filter: drop-shadow(0 6px 14px rgba(11,30,51,.35)); }
+  .prov { fill: var(--paper-2); stroke: #fff; stroke-width: 2.5; stroke-linejoin: round; cursor: pointer; transition: fill .22s ease, filter .22s ease; }
+  .prov:hover, .prov:focus-visible { fill: var(--accent); outline: none; }
+  .prov.selected { fill: var(--accent); filter: drop-shadow(0 6px 14px rgba(11,30,51,.35)); }
   .prov-label { font-family: "Big Shoulders", sans-serif; font-size: 13px; font-weight: 700; pointer-events: none; }
   .city-pin { cursor: pointer; }
   .city-pin .dot { fill: #fff; stroke: var(--navy); stroke-width: 2; transform-box: fill-box; transform-origin: center; transition: transform .18s ease, fill .18s ease, stroke .18s ease; }
@@ -701,34 +699,38 @@
     </div>
     <div class="coverage">
       <div class="coverage-map reveal">
-        <svg viewBox="0 0 340 300" aria-label="Mapa interactivo esquemático de Galicia">
-          <path class="prov" data-prov="coruna" tabindex="0" role="button" aria-label="A Coruña" d="M40 30 L160 15 L190 70 L150 110 L70 105 L30 70 Z"/>
-          <path class="prov" data-prov="lugo" tabindex="0" role="button" aria-label="Lugo" d="M160 15 L300 40 L290 110 L190 70 Z"/>
-          <path class="prov home" data-prov="ourense" tabindex="0" role="button" aria-label="Ourense, sede central" d="M70 105 L190 70 L230 160 L150 210 L60 190 Z"/>
-          <path class="prov" data-prov="pontevedra" tabindex="0" role="button" aria-label="Pontevedra" d="M190 70 L290 110 L260 210 L150 210 L230 160 Z"/>
+        <svg viewBox="0 0 360 385" aria-label="Mapa interactivo esquemático de Galicia">
+          <path class="prov" data-prov="coruna" tabindex="0" role="button" aria-label="A Coruña"
+            d="M185 210 L183 60 L160 45 L168 30 L140 40 L148 22 L118 35 L125 18 L95 32 L100 15 L72 30 L60 50 L48 70 L58 88 L40 105 L55 122 L38 140 L52 158 L36 175 L58 190 L75 205 L110 210 Z"/>
+          <path class="prov" data-prov="lugo" tabindex="0" role="button" aria-label="Lugo"
+            d="M185 210 L183 60 L200 42 L195 25 L222 38 L218 20 L248 35 L245 15 L275 30 L272 12 L300 28 L330 45 L318 75 L332 100 L312 125 L328 150 L308 175 L300 205 Z"/>
+          <path class="prov" data-prov="pontevedra" tabindex="0" role="button" aria-label="Pontevedra"
+            d="M185 210 L110 210 L78 222 L95 238 L65 250 L88 265 L58 280 L82 295 L60 310 L85 322 L95 330 L120 345 L110 362 L140 350 L150 368 L185 345 Z"/>
+          <path class="prov" data-prov="ourense" tabindex="0" role="button" aria-label="Ourense, sede central"
+            d="M185 210 L300 205 L288 235 L302 260 L285 285 L296 310 L270 325 L240 335 L185 345 Z"/>
 
-          <text class="prov-label" x="20" y="55" fill="#123a5c">A CORUÑA</text>
-          <text class="prov-label" x="215" y="45" fill="#123a5c">LUGO</text>
-          <text class="prov-label" x="70" y="165" fill="#fff">OURENSE</text>
-          <text class="prov-label" x="185" y="155" fill="#123a5c">PONTEVEDRA</text>
+          <text class="prov-label" x="75" y="115" fill="#123a5c">A CORUÑA</text>
+          <text class="prov-label" x="230" y="112" fill="#123a5c">LUGO</text>
+          <text class="prov-label" x="205" y="272" fill="#123a5c">OURENSE</text>
+          <text class="prov-label" x="63" y="252" fill="#123a5c">PONTEVEDRA</text>
 
-          <g class="city-pin" data-prov="coruna" tabindex="0" role="button" aria-label="A Coruña ciudad" transform="translate(62,52)">
+          <g class="city-pin" data-prov="coruna" tabindex="0" role="button" aria-label="A Coruña ciudad" transform="translate(78,50)">
             <circle class="dot" r="5"/><text x="9" y="4">A Coruña</text>
           </g>
-          <g class="city-pin" data-prov="coruna" tabindex="0" role="button" aria-label="Santiago de Compostela" transform="translate(118,82)">
+          <g class="city-pin" data-prov="coruna" tabindex="0" role="button" aria-label="Santiago de Compostela" transform="translate(140,145)">
             <circle class="dot" r="5"/><text x="9" y="4">Santiago</text>
           </g>
-          <g class="city-pin" data-prov="lugo" tabindex="0" role="button" aria-label="Lugo ciudad" transform="translate(228,55)">
+          <g class="city-pin" data-prov="lugo" tabindex="0" role="button" aria-label="Lugo ciudad" transform="translate(245,95)">
             <circle class="dot" r="5"/><text x="9" y="4">Lugo</text>
           </g>
-          <g class="city-pin" data-prov="pontevedra" tabindex="0" role="button" aria-label="Vigo" transform="translate(198,178)">
-            <circle class="dot" r="5"/><text x="-45" y="4">Vigo</text>
+          <g class="city-pin" data-prov="pontevedra" tabindex="0" role="button" aria-label="Vigo" transform="translate(90,300)">
+            <circle class="dot" r="5"/><text x="9" y="4">Vigo</text>
           </g>
-          <g class="city-pin" data-prov="pontevedra" tabindex="0" role="button" aria-label="Pontevedra ciudad" transform="translate(238,138)">
+          <g class="city-pin" data-prov="pontevedra" tabindex="0" role="button" aria-label="Pontevedra ciudad" transform="translate(145,255)">
             <circle class="dot" r="5"/><text x="9" y="4">Pontevedra</text>
           </g>
 
-          <g class="hq-group" data-prov="ourense" tabindex="0" role="button" aria-label="Ourense capital, sede" transform="translate(128,150)">
+          <g class="hq-group" data-prov="ourense" tabindex="0" role="button" aria-label="Ourense capital, sede" transform="translate(230,260)">
             <circle class="hq-pulse" r="8"/>
             <circle class="hq-core" r="7"/>
           </g>
